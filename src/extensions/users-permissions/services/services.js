@@ -1,10 +1,10 @@
-const { getService } = require("@strapi/plugin-users-permissions/server/utils");
+const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const roles = {
   parent: 1,
   child: 4
 }
 const formatError = error => [
-  { messages: [{ id: error.id, message: error.message, field: error.field }] },
+  {messages: [{id: error.id, message: error.message, field: error.field}]},
 ];
 const customError = (ctx, log, status) => {
   return ctx.send({
@@ -24,7 +24,7 @@ const userFinder = async phone => {
   const _phone = _isPhonePlusMode ? phone.toString().slice(1).trim() : phone
   const users = await strapi.entityService.findMany(
     'plugin::users-permissions.user',
-    { filters: { username: _phone } }
+    {filters: {username: _phone}}
   );
   return users && users.length ? users[0] : null
 }
@@ -39,11 +39,11 @@ module.exports = {
     const user = await strapi.entityService.findOne(
       'plugin::users-permissions.user',
       ctx.state.user.id,
-      { populate: ['role'] }
+      {populate: ['role']}
     );
     if (user.role.id === roles.child) {
       const _child = await strapi.entityService.findMany('api::child.child', {
-        filters: { user: { id: { $eq: _id } } },
+        filters: {user: {id: {$eq: _id}}},
         populate: '*'
       });
       if (_child && _child[0]) {
@@ -55,7 +55,7 @@ module.exports = {
     }
     if (user.role.id === roles.parent) {
       const _parent = await strapi.entityService.findMany('api::parent.parent', {
-        filters: { user: { id: { $eq: _id } } },
+        filters: {user: {id: {$eq: _id}}},
         populate: '*'
       });
       if (_parent && _parent[0]) {
@@ -89,57 +89,31 @@ module.exports = {
   },
   async customRegisterService(ctx) {
 
-    const _body = { ...ctx.request.body }
+    const _body = {...ctx.request.body}
 
     // const otpcode = Math.floor(Math.random() * 9000) + 1000;
     const otpcode = 1234
-
-    // if (!_body.username) {
-    //   return ctx.badRequest(
-    //     null,
-    //     formatError({
-    //       id: 'Auth.form.error.username.not.found',
-    //       message: 'Username field is not defined.',
-    //     })
-    //   );
-    // }
     if (!_body.phone) {
-      return customError(ctx, 'Phone is required')
+      return customError(ctx, 'phone is required')
+    }
+    if (!_body.name) {
+      return customError(ctx, 'name is required')
     }
     if (!_body.password) {
-      return customError(ctx,'Password is required')
+      return customError(ctx, 'password is required')
     }
 
     const _isPhonePlusMode = /^[+][9][9][8]\d{9}$/.test(_body.phone)
 
-    if (!_isPhonePlusMode)  {
-      return customError(ctx,'Password is not valid. Example: +998912345678')
+    if (!_isPhonePlusMode) {
+      return customError(ctx, 'Phone is not valid. Example: +998912345678')
     }
 
-    if (_isPhonePlusMode) {
+    // if (_isPhonePlusMode) {
       _body.username = ctx.request.body.phone.slice(1)
-    }
-    _body.password = _body.username + '_123'
+    // }
+    // _body.password = _body.username + '_123'
     _body.email = _body.username + '@gmail.com'
-
-    // if (!_body.password) {
-    //   return ctx.badRequest(
-    //     null,
-    //     formatError({
-    //       id: 'Register.form.error.username.required',
-    //       message: 'Password is required.',
-    //     })
-    //   );
-    // }
-    // if (!_body.email) {
-    //   return ctx.badRequest(
-    //     null,
-    //     formatError({
-    //       id: 'Register.form.error.email.required',
-    //       message: 'Email is required.',
-    //     })
-    //   );
-    // }
 
     const _user = await strapi.entityService.findMany('plugin::users-permissions.user', {
       filters: {
@@ -153,28 +127,15 @@ module.exports = {
     });
 
     if (_user && _user.length) {
-      // const _ = _user[0]
-      // if (!_.confirmed && _.role.id === 1) {
-      //   await strapi.entityService.update('plugin::users-permissions.user', _.id, {
-      //     data: {
-      //       otp: otpcode.toString()
-      //     }
-      //   })
-      //   return {
-      //     status: {
-      //       confirmed: false
-      //     }
-      //   }
-      // }
-      return customError(ctx,'Phone is already exist')
+      return customError(ctx, 'Phone is already exist')
     }
-    const pluginStore = await strapi.store({ type: 'plugin', name: 'users-permissions' });
+    const pluginStore = await strapi.store({type: 'plugin', name: 'users-permissions'});
     const settings = await pluginStore.get({
       key: 'advanced',
     })
     const role = await strapi
       .query('plugin::users-permissions.role')
-      .findOne({ where: { type: settings.default_role } });
+      .findOne({where: {type: settings.default_role}});
 
 
     if (!_body.role) {
@@ -194,7 +155,7 @@ module.exports = {
     //     })
     //   );
     // }
-    await strapi.entityService.create('plugin::users-permissions.user', {
+    const createdUser = await strapi.entityService.create('plugin::users-permissions.user', {
       data: {
         provider: 'local',
         confirmed: false,
@@ -202,22 +163,31 @@ module.exports = {
         ..._body
       },
     });
+    if (_body.role === roles.parent) {
+      const parent = await strapi.entityService.create('api::parent.parent', {
+        data: {
+          name: _body.name,
+          phone: _body.phone,
+          user: createdUser.id
+        }
+      });
+    }
     ctx.send({
       status: 'sent otp'
       // sms_service_data: _send
     })
   },
   async registerOTP(ctx) {
-    const _body = { ...ctx.request.body }
+    const _body = {...ctx.request.body}
 
-    if (!_body.phone) return customError(ctx,'Phone is required')
-    if (!_body.otp) return customError(ctx,'Otp is required')
+    if (!_body.phone) return customError(ctx, 'Phone is required')
+    if (!_body.otp) return customError(ctx, 'Otp is required')
 
     const _user = await userFinder(_body.phone)
 
 
-    if (!_user) return customError(ctx,'User is not found')
-    if (_user.otp != _body.otp) return customError(ctx,'Otp not equal with db otp')
+    if (!_user) return customError(ctx, 'User is not found')
+    if (_user.otp != _body.otp) return customError(ctx, 'Otp not equal with db otp')
 
     try {
       // if (_user.role.id === 6) {
@@ -249,7 +219,7 @@ module.exports = {
       );
     }
   },
-  async finder (ctx) {
+  async finder(ctx) {
     const _query = ctx.query
     if (!_query.phone) return customError(ctx, 'Phone ("phone") query is required')
     const _user = await userFinder(_query.phone)

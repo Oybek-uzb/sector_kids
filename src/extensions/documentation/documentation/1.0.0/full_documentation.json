@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-02-27T04:20:35.318Z"
+    "x-generation-date": "2023-02-27T19:46:14.390Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -186,11 +186,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -222,16 +219,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -810,6 +797,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -955,11 +953,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -991,16 +986,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -1579,6 +1564,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -1757,11 +1753,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -1793,16 +1786,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -2381,6 +2364,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -2526,11 +2520,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -2562,16 +2553,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -3150,6 +3131,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -3350,11 +3342,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -3386,16 +3375,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -3974,6 +3953,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -4119,11 +4109,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -4155,16 +4142,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -4743,6 +4720,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -4921,11 +4909,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -4957,16 +4942,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -5545,6 +5520,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -5690,11 +5676,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -5726,16 +5709,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -6314,6 +6287,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -6438,11 +6422,8 @@
               "imei": {
                 "type": "string"
               },
-              "verify_token": {
+              "token": {
                 "type": "string"
-              },
-              "is_verify_token_expired": {
-                "type": "boolean"
               },
               "info": {},
               "deviceInfo": {},
@@ -6467,6 +6448,17 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "secret": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
               }
             }
           }
@@ -6490,11 +6482,8 @@
               "imei": {
                 "type": "string"
               },
-              "verify_token": {
+              "token": {
                 "type": "string"
-              },
-              "is_verify_token_expired": {
-                "type": "boolean"
               },
               "info": {},
               "deviceInfo": {},
@@ -6526,16 +6515,6 @@
                           },
                           "phone": {
                             "type": "string"
-                          },
-                          "phone_verify_token": {
-                            "type": "string"
-                          },
-                          "phone_verified": {
-                            "type": "boolean"
-                          },
-                          "phone_verify_token_expire": {
-                            "type": "string",
-                            "format": "date-time"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -7070,11 +7049,8 @@
                                         "imei": {
                                           "type": "string"
                                         },
-                                        "verify_token": {
+                                        "token": {
                                           "type": "string"
-                                        },
-                                        "is_verify_token_expired": {
-                                          "type": "boolean"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -7105,6 +7081,17 @@
                                               }
                                             }
                                           }
+                                        },
+                                        "secret": {
+                                          "type": "string",
+                                          "pattern": "^\\d*$",
+                                          "example": "123456789"
+                                        },
+                                        "gender": {
+                                          "type": "string"
+                                        },
+                                        "phone": {
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -7202,6 +7189,17 @@
                     }
                   }
                 }
+              },
+              "secret": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -7267,11 +7265,8 @@
               "imei": {
                 "type": "string"
               },
-              "verify_token": {
+              "token": {
                 "type": "string"
-              },
-              "is_verify_token_expired": {
-                "type": "boolean"
               },
               "info": {},
               "deviceInfo": {},
@@ -7303,16 +7298,6 @@
                           },
                           "phone": {
                             "type": "string"
-                          },
-                          "phone_verify_token": {
-                            "type": "string"
-                          },
-                          "phone_verified": {
-                            "type": "boolean"
-                          },
-                          "phone_verify_token_expire": {
-                            "type": "string",
-                            "format": "date-time"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -7847,11 +7832,8 @@
                                         "imei": {
                                           "type": "string"
                                         },
-                                        "verify_token": {
+                                        "token": {
                                           "type": "string"
-                                        },
-                                        "is_verify_token_expired": {
-                                          "type": "boolean"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -7882,6 +7864,17 @@
                                               }
                                             }
                                           }
+                                        },
+                                        "secret": {
+                                          "type": "string",
+                                          "pattern": "^\\d*$",
+                                          "example": "123456789"
+                                        },
+                                        "gender": {
+                                          "type": "string"
+                                        },
+                                        "phone": {
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -7979,6 +7972,17 @@
                     }
                   }
                 }
+              },
+              "secret": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -8077,11 +8081,8 @@
               "imei": {
                 "type": "string"
               },
-              "verify_token": {
+              "token": {
                 "type": "string"
-              },
-              "is_verify_token_expired": {
-                "type": "boolean"
               },
               "info": {},
               "deviceInfo": {},
@@ -8113,16 +8114,6 @@
                           },
                           "phone": {
                             "type": "string"
-                          },
-                          "phone_verify_token": {
-                            "type": "string"
-                          },
-                          "phone_verified": {
-                            "type": "boolean"
-                          },
-                          "phone_verify_token_expire": {
-                            "type": "string",
-                            "format": "date-time"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -8657,11 +8648,8 @@
                                         "imei": {
                                           "type": "string"
                                         },
-                                        "verify_token": {
+                                        "token": {
                                           "type": "string"
-                                        },
-                                        "is_verify_token_expired": {
-                                          "type": "boolean"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -8692,6 +8680,17 @@
                                               }
                                             }
                                           }
+                                        },
+                                        "secret": {
+                                          "type": "string",
+                                          "pattern": "^\\d*$",
+                                          "example": "123456789"
+                                        },
+                                        "gender": {
+                                          "type": "string"
+                                        },
+                                        "phone": {
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -8789,6 +8788,17 @@
                     }
                   }
                 }
+              },
+              "secret": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -8854,11 +8864,8 @@
               "imei": {
                 "type": "string"
               },
-              "verify_token": {
+              "token": {
                 "type": "string"
-              },
-              "is_verify_token_expired": {
-                "type": "boolean"
               },
               "info": {},
               "deviceInfo": {},
@@ -8890,16 +8897,6 @@
                           },
                           "phone": {
                             "type": "string"
-                          },
-                          "phone_verify_token": {
-                            "type": "string"
-                          },
-                          "phone_verified": {
-                            "type": "boolean"
-                          },
-                          "phone_verify_token_expire": {
-                            "type": "string",
-                            "format": "date-time"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -9434,11 +9431,8 @@
                                         "imei": {
                                           "type": "string"
                                         },
-                                        "verify_token": {
+                                        "token": {
                                           "type": "string"
-                                        },
-                                        "is_verify_token_expired": {
-                                          "type": "boolean"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -9469,6 +9463,17 @@
                                               }
                                             }
                                           }
+                                        },
+                                        "secret": {
+                                          "type": "string",
+                                          "pattern": "^\\d*$",
+                                          "example": "123456789"
+                                        },
+                                        "gender": {
+                                          "type": "string"
+                                        },
+                                        "phone": {
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -9566,6 +9571,17 @@
                     }
                   }
                 }
+              },
+              "secret": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
+              },
+              "gender": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -9682,11 +9698,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -9718,16 +9731,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -10306,6 +10309,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -10433,11 +10447,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -10469,16 +10480,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -11057,6 +11058,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -11217,11 +11229,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -11253,16 +11262,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -11841,6 +11840,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -11968,11 +11978,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -12004,16 +12011,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -12592,6 +12589,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -12770,11 +12778,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -12806,16 +12811,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -13394,6 +13389,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -13528,11 +13534,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -13564,16 +13567,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -14152,6 +14145,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -14319,11 +14323,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -14355,16 +14356,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -14943,6 +14934,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -15077,11 +15079,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -15113,16 +15112,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -15701,6 +15690,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -15910,11 +15910,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -15946,16 +15943,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -16534,6 +16521,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -16789,11 +16787,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -16825,16 +16820,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -17413,6 +17398,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -17701,11 +17697,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -17737,16 +17730,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -18325,6 +18308,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -18580,11 +18574,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -18616,16 +18607,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -19204,6 +19185,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -22275,11 +22267,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -22311,16 +22300,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -22899,6 +22878,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -23036,11 +23026,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -23072,16 +23059,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -23660,6 +23637,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -23830,11 +23818,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -23866,16 +23851,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -24454,6 +24429,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -24591,11 +24577,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -24627,16 +24610,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -25215,6 +25188,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -25393,11 +25377,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -25429,16 +25410,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -26017,6 +25988,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -26148,11 +26130,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -26184,16 +26163,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -26772,6 +26741,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -26936,11 +26916,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -26972,16 +26949,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -27560,6 +27527,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -27691,11 +27669,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -27727,16 +27702,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -28315,6 +28280,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -28500,11 +28476,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -28536,16 +28509,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -29124,6 +29087,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -29268,11 +29242,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -29304,16 +29275,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -29892,6 +29853,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -30069,11 +30041,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -30105,16 +30074,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -30693,6 +30652,17 @@
                                 }
                               }
                             }
+                          },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -30837,11 +30807,8 @@
                           "imei": {
                             "type": "string"
                           },
-                          "verify_token": {
+                          "token": {
                             "type": "string"
-                          },
-                          "is_verify_token_expired": {
-                            "type": "boolean"
                           },
                           "info": {},
                           "deviceInfo": {},
@@ -30873,16 +30840,6 @@
                                       },
                                       "phone": {
                                         "type": "string"
-                                      },
-                                      "phone_verify_token": {
-                                        "type": "string"
-                                      },
-                                      "phone_verified": {
-                                        "type": "boolean"
-                                      },
-                                      "phone_verify_token_expire": {
-                                        "type": "string",
-                                        "format": "date-time"
                                       },
                                       "info": {},
                                       "deviceInfo": {},
@@ -31462,6 +31419,17 @@
                               }
                             }
                           },
+                          "secret": {
+                            "type": "string",
+                            "pattern": "^\\d*$",
+                            "example": "123456789"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "phone": {
+                            "type": "string"
+                          },
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -31601,16 +31569,6 @@
               "phone": {
                 "type": "string"
               },
-              "phone_verify_token": {
-                "type": "string"
-              },
-              "phone_verified": {
-                "type": "boolean"
-              },
-              "phone_verify_token_expire": {
-                "type": "string",
-                "format": "date-time"
-              },
               "info": {},
               "deviceInfo": {},
               "user": {
@@ -31656,16 +31614,6 @@
               },
               "phone": {
                 "type": "string"
-              },
-              "phone_verify_token": {
-                "type": "string"
-              },
-              "phone_verified": {
-                "type": "boolean"
-              },
-              "phone_verify_token_expire": {
-                "type": "string",
-                "format": "date-time"
               },
               "info": {},
               "deviceInfo": {},
@@ -32200,11 +32148,8 @@
                             "imei": {
                               "type": "string"
                             },
-                            "verify_token": {
+                            "token": {
                               "type": "string"
-                            },
-                            "is_verify_token_expired": {
-                              "type": "boolean"
                             },
                             "info": {},
                             "deviceInfo": {},
@@ -32236,16 +32181,6 @@
                                         },
                                         "phone": {
                                           "type": "string"
-                                        },
-                                        "phone_verify_token": {
-                                          "type": "string"
-                                        },
-                                        "phone_verified": {
-                                          "type": "boolean"
-                                        },
-                                        "phone_verify_token_expire": {
-                                          "type": "string",
-                                          "format": "date-time"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -32333,6 +32268,17 @@
                                   }
                                 }
                               }
+                            },
+                            "secret": {
+                              "type": "string",
+                              "pattern": "^\\d*$",
+                              "example": "123456789"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
                             },
                             "createdAt": {
                               "type": "string",
@@ -32444,16 +32390,6 @@
               "phone": {
                 "type": "string"
               },
-              "phone_verify_token": {
-                "type": "string"
-              },
-              "phone_verified": {
-                "type": "boolean"
-              },
-              "phone_verify_token_expire": {
-                "type": "string",
-                "format": "date-time"
-              },
               "info": {},
               "deviceInfo": {},
               "user": {
@@ -32987,11 +32923,8 @@
                             "imei": {
                               "type": "string"
                             },
-                            "verify_token": {
+                            "token": {
                               "type": "string"
-                            },
-                            "is_verify_token_expired": {
-                              "type": "boolean"
                             },
                             "info": {},
                             "deviceInfo": {},
@@ -33023,16 +32956,6 @@
                                         },
                                         "phone": {
                                           "type": "string"
-                                        },
-                                        "phone_verify_token": {
-                                          "type": "string"
-                                        },
-                                        "phone_verified": {
-                                          "type": "boolean"
-                                        },
-                                        "phone_verify_token_expire": {
-                                          "type": "string",
-                                          "format": "date-time"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -33120,6 +33043,17 @@
                                   }
                                 }
                               }
+                            },
+                            "secret": {
+                              "type": "string",
+                              "pattern": "^\\d*$",
+                              "example": "123456789"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
                             },
                             "createdAt": {
                               "type": "string",
@@ -33264,16 +33198,6 @@
               "phone": {
                 "type": "string"
               },
-              "phone_verify_token": {
-                "type": "string"
-              },
-              "phone_verified": {
-                "type": "boolean"
-              },
-              "phone_verify_token_expire": {
-                "type": "string",
-                "format": "date-time"
-              },
               "info": {},
               "deviceInfo": {},
               "user": {
@@ -33807,11 +33731,8 @@
                             "imei": {
                               "type": "string"
                             },
-                            "verify_token": {
+                            "token": {
                               "type": "string"
-                            },
-                            "is_verify_token_expired": {
-                              "type": "boolean"
                             },
                             "info": {},
                             "deviceInfo": {},
@@ -33843,16 +33764,6 @@
                                         },
                                         "phone": {
                                           "type": "string"
-                                        },
-                                        "phone_verify_token": {
-                                          "type": "string"
-                                        },
-                                        "phone_verified": {
-                                          "type": "boolean"
-                                        },
-                                        "phone_verify_token_expire": {
-                                          "type": "string",
-                                          "format": "date-time"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -33940,6 +33851,17 @@
                                   }
                                 }
                               }
+                            },
+                            "secret": {
+                              "type": "string",
+                              "pattern": "^\\d*$",
+                              "example": "123456789"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
                             },
                             "createdAt": {
                               "type": "string",
@@ -34051,16 +33973,6 @@
               "phone": {
                 "type": "string"
               },
-              "phone_verify_token": {
-                "type": "string"
-              },
-              "phone_verified": {
-                "type": "boolean"
-              },
-              "phone_verify_token_expire": {
-                "type": "string",
-                "format": "date-time"
-              },
               "info": {},
               "deviceInfo": {},
               "user": {
@@ -34594,11 +34506,8 @@
                             "imei": {
                               "type": "string"
                             },
-                            "verify_token": {
+                            "token": {
                               "type": "string"
-                            },
-                            "is_verify_token_expired": {
-                              "type": "boolean"
                             },
                             "info": {},
                             "deviceInfo": {},
@@ -34630,16 +34539,6 @@
                                         },
                                         "phone": {
                                           "type": "string"
-                                        },
-                                        "phone_verify_token": {
-                                          "type": "string"
-                                        },
-                                        "phone_verified": {
-                                          "type": "boolean"
-                                        },
-                                        "phone_verify_token_expire": {
-                                          "type": "string",
-                                          "format": "date-time"
                                         },
                                         "info": {},
                                         "deviceInfo": {},
@@ -34727,6 +34626,17 @@
                                   }
                                 }
                               }
+                            },
+                            "secret": {
+                              "type": "string",
+                              "pattern": "^\\d*$",
+                              "example": "123456789"
+                            },
+                            "gender": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
                             },
                             "createdAt": {
                               "type": "string",
