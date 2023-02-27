@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "app_usages",
+  "info": {
+    "singularName": "app-usage",
+    "pluralName": "app-usages",
+    "displayName": "app-usage",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "day": {
+      "type": "integer"
+    },
+    "icon": {
+      "type": "text"
+    },
+    "appName": {
+      "type": "string"
+    },
+    "usagePercentage": {
+      "type": "integer"
+    },
+    "usageDuration": {
+      "type": "biginteger"
+    },
+    "hash": {
+      "type": "string",
+      "unique": true
+    },
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    }
+  }
+}

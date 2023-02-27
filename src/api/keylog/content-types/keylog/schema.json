@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "keylogs",
+  "info": {
+    "singularName": "keylog",
+    "pluralName": "keylogs",
+    "displayName": "keylog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    },
+    "msg": {
+      "type": "text"
+    },
+    "packageName": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string",
+      "unique": true
+    },
+    "type": {
+      "type": "string"
+    }
+  }
+}

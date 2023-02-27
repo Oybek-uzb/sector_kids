@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contacts",
+  "info": {
+    "singularName": "contact",
+    "pluralName": "contacts",
+    "displayName": "contact",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "contactName": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "text",
+      "unique": true
+    },
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    }
+  }
+}

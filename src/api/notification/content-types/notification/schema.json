@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "singularName": "notification",
+    "pluralName": "notifications",
+    "displayName": "notification"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    },
+    "title": {
+      "type": "text"
+    },
+    "appName": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "postTime": {
+      "type": "datetime"
+    },
+    "key": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}

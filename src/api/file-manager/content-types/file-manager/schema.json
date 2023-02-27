@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "file_managers",
+  "info": {
+    "singularName": "file-manager",
+    "pluralName": "file-managers",
+    "displayName": "fileManager",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "isDir": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
+    "path": {
+      "type": "string"
+    },
+    "size": {
+      "type": "biginteger"
+    },
+    "downloaded": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "file": {
+      "type": "json"
+    },
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::file-manager.file-manager"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "children",
+  "info": {
+    "singularName": "child",
+    "pluralName": "children",
+    "displayName": "Child"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "age": {
+      "type": "integer"
+    },
+    "imei": {
+      "type": "string",
+      "unique": false,
+      "required": false
+    },
+    "verify_token": {
+      "type": "text"
+    },
+    "is_verify_token_expired": {
+      "type": "boolean",
+      "default": false
+    },
+    "info": {
+      "type": "json"
+    },
+    "deviceInfo": {
+      "type": "json"
+    },
+    "isOnline": {
+      "type": "boolean",
+      "default": false
+    },
+    "lastSeen": {
+      "type": "datetime"
+    },
+    "avatar": {
+      "type": "text"
+    },
+    "commandQueue": {
+      "type": "json"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::parent.parent",
+      "inversedBy": "children"
+    }
+  }
+}

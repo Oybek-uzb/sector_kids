@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "calls",
+  "info": {
+    "singularName": "call",
+    "pluralName": "calls",
+    "displayName": "call",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "callDayTime": {
+      "type": "integer"
+    },
+    "callDuration": {
+      "type": "biginteger"
+    },
+    "callType": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string",
+      "unique": true
+    },
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    }
+  }
+}

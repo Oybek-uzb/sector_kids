@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "items",
+  "info": {
+    "singularName": "item",
+    "pluralName": "items",
+    "displayName": "item"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "file": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "date": {
+      "type": "biginteger"
+    },
+    "path": {
+      "type": "string"
+    },
+    "filesize": {
+      "type": "biginteger"
+    },
+    "uploadedAt": {
+      "type": "datetime"
+    }
+  }
+}

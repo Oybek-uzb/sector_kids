@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "installed_apps",
+  "info": {
+    "singularName": "installed-app",
+    "pluralName": "installed-apps",
+    "displayName": "installed-app",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "appName": {
+      "type": "string"
+    },
+    "packageName": {
+      "type": "string"
+    },
+    "versionCode": {
+      "type": "string"
+    },
+    "versionName": {
+      "type": "string"
+    },
+    "installedDate": {
+      "type": "datetime"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}
