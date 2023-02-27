@@ -63,27 +63,8 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "name": {
+    "otp": {
       "type": "string"
-    },
-    "phone": {
-      "type": "string"
-    },
-    "phone_verify_token": {
-      "type": "text"
-    },
-    "phone_verified": {
-      "type": "boolean",
-      "default": false
-    },
-    "phone_verify_token_expire": {
-      "type": "datetime"
-    },
-    "info": {
-      "type": "json"
-    },
-    "deviceInfo": {
-      "type": "json"
     }
   }
 }
