@@ -47,10 +47,11 @@ module.exports = createCoreController('api::app-usage.app-usage', ({strapi}) => 
       const child = childData[0]
       let res = []
       for await (const item of data) {
-        const _hash = md5(item.appName + item.usagePercentage + item.usageDuration + item.day + child.id)
+        const _hash = md5(item.appName + item.usagePercentage + item.usageDuration + item.day + child.id + item.date)
         const _ = {
           day: item.day,
           icon: item.icon,
+          date: item.date,
           appName: item.appName,
           usagePercentage: item.usagePercentage,
           usageDuration: item.usageDuration,

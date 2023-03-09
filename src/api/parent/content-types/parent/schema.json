@@ -39,7 +39,7 @@
       "type": "string"
     },
     "inps": {
-      "type": "biginteger"
+      "type": "string"
     }
   }
 }

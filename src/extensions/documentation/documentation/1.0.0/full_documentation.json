@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-03-09T05:47:48.543Z"
+    "x-generation-date": "2023-03-09T06:32:46.420Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -131,6 +131,11 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
               }
             }
           }
@@ -754,9 +759,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -881,6 +884,11 @@
                     }
                   }
                 }
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
               },
               "createdAt": {
                 "type": "string",
@@ -1546,9 +1554,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -1673,6 +1679,11 @@
                     }
                   }
                 }
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
               },
               "createdAt": {
                 "type": "string",
@@ -2371,9 +2382,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -2498,6 +2507,11 @@
                     }
                   }
                 }
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
               },
               "createdAt": {
                 "type": "string",
@@ -3163,9 +3177,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -3290,6 +3302,11 @@
                     }
                   }
                 }
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^\\d*$",
+                "example": "123456789"
               },
               "createdAt": {
                 "type": "string",
@@ -4009,9 +4026,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -4805,9 +4820,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -5634,9 +5647,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -6430,9 +6441,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -7394,9 +7403,7 @@
                             "type": "string"
                           },
                           "inps": {
-                            "type": "string",
-                            "pattern": "^\\d*$",
-                            "example": "123456789"
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -8219,9 +8226,7 @@
                             "type": "string"
                           },
                           "inps": {
-                            "type": "string",
-                            "pattern": "^\\d*$",
-                            "example": "123456789"
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -9077,9 +9082,7 @@
                             "type": "string"
                           },
                           "inps": {
-                            "type": "string",
-                            "pattern": "^\\d*$",
-                            "example": "123456789"
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -9902,9 +9905,7 @@
                             "type": "string"
                           },
                           "inps": {
-                            "type": "string",
-                            "pattern": "^\\d*$",
-                            "example": "123456789"
+                            "type": "string"
                           },
                           "createdAt": {
                             "type": "string",
@@ -10665,9 +10666,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -11439,9 +11438,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -12246,9 +12243,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -13020,9 +13015,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -13850,9 +13843,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -14636,9 +14627,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -15455,9 +15444,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -16241,9 +16228,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -17102,9 +17087,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -18004,9 +17987,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -18939,9 +18920,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -19841,9 +19820,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -20804,9 +20781,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -21598,9 +21573,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -22425,9 +22398,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -23219,9 +23190,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -25439,9 +25408,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -26228,9 +26195,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -27050,9 +27015,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -27839,9 +27802,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -28677,9 +28638,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -29463,9 +29422,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -30282,9 +30239,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -31068,9 +31023,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -31908,9 +31861,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -32699,9 +32650,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -33523,9 +33472,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -34314,9 +34261,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -34564,9 +34509,7 @@
                 "type": "string"
               },
               "inps": {
-                "type": "string",
-                "pattern": "^\\d*$",
-                "example": "123456789"
+                "type": "string"
               }
             }
           }
@@ -35197,9 +35140,7 @@
                                           "type": "string"
                                         },
                                         "inps": {
-                                          "type": "string",
-                                          "pattern": "^\\d*$",
-                                          "example": "123456789"
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -35330,9 +35271,7 @@
                 "type": "string"
               },
               "inps": {
-                "type": "string",
-                "pattern": "^\\d*$",
-                "example": "123456789"
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -36005,9 +35944,7 @@
                                           "type": "string"
                                         },
                                         "inps": {
-                                          "type": "string",
-                                          "pattern": "^\\d*$",
-                                          "example": "123456789"
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -36138,9 +36075,7 @@
                 "type": "string"
               },
               "inps": {
-                "type": "string",
-                "pattern": "^\\d*$",
-                "example": "123456789"
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -36846,9 +36781,7 @@
                                           "type": "string"
                                         },
                                         "inps": {
-                                          "type": "string",
-                                          "pattern": "^\\d*$",
-                                          "example": "123456789"
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -36979,9 +36912,7 @@
                 "type": "string"
               },
               "inps": {
-                "type": "string",
-                "pattern": "^\\d*$",
-                "example": "123456789"
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -37654,9 +37585,7 @@
                                           "type": "string"
                                         },
                                         "inps": {
-                                          "type": "string",
-                                          "pattern": "^\\d*$",
-                                          "example": "123456789"
+                                          "type": "string"
                                         },
                                         "createdAt": {
                                           "type": "string",
@@ -37787,9 +37716,7 @@
                 "type": "string"
               },
               "inps": {
-                "type": "string",
-                "pattern": "^\\d*$",
-                "example": "123456789"
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -38498,9 +38425,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -39286,9 +39211,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -40107,9 +40030,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -40895,9 +40816,7 @@
                                         "type": "string"
                                       },
                                       "inps": {
-                                        "type": "string",
-                                        "pattern": "^\\d*$",
-                                        "example": "123456789"
+                                        "type": "string"
                                       },
                                       "createdAt": {
                                         "type": "string",

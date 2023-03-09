@@ -1,7 +1,7 @@
 'use strict';
 
 const services = require('./services/services')
-const {me, findAll, customRegisterService, registerOTP, finder } = services
+const {me, findAll, customRegisterService, registerOTP, finder, passportService } = services
 
 
 module.exports = (plugin) => {
@@ -15,6 +15,7 @@ module.exports = (plugin) => {
   plugin.controllers.user.customRegisterService = customRegisterService
   plugin.controllers.user.registerOTP = registerOTP
   plugin.controllers.user.check = finder
+  plugin.controllers.user.passportService = passportService
   // plugin.controllers.user.recoveryPassword = recoveryPassword
 
   // HANDLERS
@@ -25,6 +26,12 @@ module.exports = (plugin) => {
     method: 'GET',
     path: '/check_user',
     handler: 'user.check',
+    config: {}
+  })
+  plugin.routes['content-api'].routes.push({
+    method: 'POST',
+    path: '/passport',
+    handler: 'user.passportService',
     config: {}
   })
   // plugin.routes['content-api'].routes.push({

@@ -1,4 +1,5 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
+const jwt = require('jsonwebtoken');
 const roles = {
   parent: 1,
   child: 4
@@ -11,6 +12,14 @@ const customError = (ctx, log, status) => {
     success: false,
     message: log
   }, 400);
+}
+async function parseJwt (token, ctx) {
+  try {
+    const _ = jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
+    return _
+  } catch (e) {
+    return e
+  }
 }
 const sanitizeOutput = (user) => {
   const {
@@ -224,5 +233,30 @@ module.exports = {
     if (!_query.phone) return customError(ctx, 'Phone ("phone") query is required')
     const _user = await userFinder(_query.phone)
     return _user !== null
+  },
+  async passportService(ctx) {
+    const _body = {...ctx.request.body}
+    const {passport, inps} = _body
+    if (!passport) return customError(ctx, 'passport is required')
+    if (!inps) return customError(ctx, 'inps is required')
+    const _ = !/[A-Z]{2}\d{7}/.test(passport)
+    const _inpsCheck = !/^\d{14}$/.test(inps)
+    if (_) return customError(ctx, 'Passport is incorrected. Ex: AA1234567')
+    if (_inpsCheck) return customError(ctx, 'Inps is incorrected. Ex: 12345678901234')
+    const token = ctx.request.headers.authorization
+    const user = await parseJwt(token.split(' ')[1])
+    const parentData = await strapi.entityService.findMany('api::parent.parent', { filters: { user: user.id } });
+    const _p = parentData[0]
+    try {
+      const parent = await strapi.entityService.update('api::parent.parent', _p.id, {
+        data: {
+          passport: passport,
+          inps: inps
+        },
+      });
+      return parent
+    } catch (e) {
+      return customError(ctx, e.message, 500)
+    }
   }
 }
