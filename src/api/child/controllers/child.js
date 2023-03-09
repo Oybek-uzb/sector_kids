@@ -93,7 +93,8 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         }
       })
       return {
-        token: child.token
+        token: child.token,
+        id: child.id
       }
     }
   }
