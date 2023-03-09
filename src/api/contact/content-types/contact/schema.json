@@ -26,6 +26,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::child.child"
+    },
+    "date": {
+      "type": "datetime"
     }
   }
 }

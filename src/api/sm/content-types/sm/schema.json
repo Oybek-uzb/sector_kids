@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "calls",
+  "collectionName": "sms",
   "info": {
-    "singularName": "call",
-    "pluralName": "calls",
-    "displayName": "call",
+    "singularName": "sm",
+    "pluralName": "sms",
+    "displayName": "sms",
     "description": ""
   },
   "options": {
@@ -12,32 +12,26 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "callDuration": {
-      "type": "integer"
-    },
-    "callType": {
+    "address": {
       "type": "string"
     },
-    "phoneNumber": {
-      "type": "string"
+    "msg": {
+      "type": "text"
     },
-    "name": {
-      "type": "string"
+    "date": {
+      "type": "datetime"
     },
     "hash": {
       "type": "string",
       "unique": true
     },
+    "type": {
+      "type": "string"
+    },
     "child": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::child.child"
-    },
-    "date": {
-      "type": "datetime"
-    },
-    "callTime": {
-      "type": "datetime"
     }
   }
 }

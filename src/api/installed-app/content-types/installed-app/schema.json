@@ -33,6 +33,11 @@
     "hash": {
       "type": "string",
       "unique": true
+    },
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
     }
   }
 }

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "child",
     "pluralName": "children",
-    "displayName": "Child"
+    "displayName": "Child",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -22,12 +23,8 @@
       "unique": false,
       "required": false
     },
-    "verify_token": {
+    "token": {
       "type": "text"
-    },
-    "is_verify_token_expired": {
-      "type": "boolean",
-      "default": false
     },
     "info": {
       "type": "json"
@@ -53,6 +50,20 @@
       "relation": "manyToOne",
       "target": "api::parent.parent",
       "inversedBy": "children"
+    },
+    "secret": {
+      "type": "biginteger"
+    },
+    "gender": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

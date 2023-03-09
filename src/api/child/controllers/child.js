@@ -5,14 +5,14 @@ const {getService} = require("@strapi/plugin-users-permissions/server/utils");
  * child controller
  */
 
-const {createCoreController} = require('@strapi/strapi').factories;
+const { createCoreController } = require('@strapi/strapi').factories;
 const customError = (ctx, log, status) => {
   return ctx.send({
     success: false,
     message: log
   }, 400);
 }
-// module.exports = createCoreController('api::child.child');
+
 
 module.exports = createCoreController('api::child.child', ({strapi}) => ({
     async find(ctx) {
@@ -29,8 +29,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async create(ctx) {
       const _body = {...ctx.request.body}
-      // const _t = getService('jwt').verify(_body.token)
-      // return  _t
+
       if (!_body.name) return customError(ctx, 'name is required')
       if (!_body.phone) return customError(ctx, 'phone is required')
       if (!_body.age) return customError(ctx, 'age is required')
