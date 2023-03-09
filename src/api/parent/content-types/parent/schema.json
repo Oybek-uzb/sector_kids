@@ -34,6 +34,12 @@
       "relation": "oneToMany",
       "target": "api::child.child",
       "mappedBy": "parent"
+    },
+    "passport": {
+      "type": "string"
+    },
+    "inps": {
+      "type": "biginteger"
     }
   }
 }

@@ -18,9 +18,6 @@
     "msg": {
       "type": "text"
     },
-    "date": {
-      "type": "datetime"
-    },
     "hash": {
       "type": "string",
       "unique": true
@@ -32,6 +29,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::child.child"
+    },
+    "date": {
+      "type": "datetime"
     }
   }
 }

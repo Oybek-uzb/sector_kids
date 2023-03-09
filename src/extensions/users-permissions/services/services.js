@@ -92,13 +92,13 @@ module.exports = {
     const _body = {...ctx.request.body}
 
     // const otpcode = Math.floor(Math.random() * 9000) + 1000;
-    const otpcode = 1234
+    const otpcode = 123456
     if (!_body.phone) {
       return customError(ctx, 'phone is required')
     }
-    if (!_body.name) {
-      return customError(ctx, 'name is required')
-    }
+    // if (!_body.name) {
+    //   return customError(ctx, 'name is required')
+    // }
     if (!_body.password) {
       return customError(ctx, 'password is required')
     }
@@ -166,7 +166,7 @@ module.exports = {
     if (_body.role === roles.parent) {
       const parent = await strapi.entityService.create('api::parent.parent', {
         data: {
-          name: _body.name,
+          // name: _body.name,
           phone: _body.phone,
           user: createdUser.id
         }

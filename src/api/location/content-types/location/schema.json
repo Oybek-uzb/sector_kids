@@ -23,12 +23,12 @@
     "longitude": {
       "type": "string"
     },
-    "date": {
-      "type": "datetime"
-    },
     "hash": {
       "type": "string",
       "unique": true
+    },
+    "date": {
+      "type": "biginteger"
     }
   }
 }

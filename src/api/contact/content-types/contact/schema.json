@@ -28,7 +28,7 @@
       "target": "api::child.child"
     },
     "date": {
-      "type": "datetime"
+      "type": "biginteger"
     }
   }
 }

@@ -31,7 +31,7 @@
       "type": "string"
     },
     "date": {
-      "type": "datetime"
+      "type": "biginteger"
     }
   }
 }

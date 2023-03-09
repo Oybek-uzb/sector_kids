@@ -33,11 +33,11 @@
       "relation": "oneToOne",
       "target": "api::child.child"
     },
-    "date": {
-      "type": "datetime"
-    },
     "callTime": {
       "type": "datetime"
+    },
+    "date": {
+      "type": "biginteger"
     }
   }
 }
