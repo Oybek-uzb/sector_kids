@@ -1,5 +1,5 @@
 'use strict';
-
+const socket = require('./extensions/socket')
 module.exports = {
   /**
    * An asynchronous register function that runs before
