@@ -15,8 +15,8 @@ const events = {
   MICROPHONE: "0xMI",
   APP_USAGE: "0xAU",
   INSTALLED_APPS: "0xIN",
-  LOCATION: "0xLO",
-  SOS: "sos"
+  LOCATION: "0xLO"
+  // SOS: "sos"
 }
 const roles = {
   parent: 1,
@@ -58,4 +58,16 @@ io.on('connection', function (socket) {
       }
     })
   }
+  socket.on('sos', async ({ parent_id, child_id, who = 'child' }) => {
+    try {
+      const _child = await strapi.entityService.findOne('api::child.child', child_id, { populate: 'user' })
+      const _parent =  await strapi.entityService.findOne('api::parent.parent', parent_id, { populate: 'user' })
+      const parent = 'user_' + _parent.user.id
+      const child = 'user_' + _child.user.id
+      if (who === 'parent') io.to(child).emit('message', { type: 'sos', message: `from parent id: ${_parent.id}` })
+      if (who === 'child') io.to(parent).emit('message', { type: 'sos', message: `from child id: ${_child.id}` })
+    } catch (error) {
+      socket.emit('error', error)
+    }
+  })
 })
