@@ -7,5 +7,12 @@ module.exports = {
       config: {
       },
     },
+    {
+      method: 'GET',
+      path: '/children/get/secret',
+      handler: 'child.getSecret',
+      config: {
+      },
+    },
   ]
 }

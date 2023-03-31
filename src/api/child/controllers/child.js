@@ -1,6 +1,7 @@
 'use strict';
 
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
+const jwt = require('jsonwebtoken');
 /**
  * child controller
  */
@@ -11,6 +12,15 @@ const customError = (ctx, log, status) => {
     success: false,
     message: log
   }, 400);
+}
+
+async function parseJwt (token, ctx) {
+  try {
+    const _ = jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
+    return _
+  } catch (e) {
+    return e
+  }
 }
 
 
@@ -77,6 +87,29 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         },
       });
       return child
+    },
+    async getSecret(ctx) {
+      const token = ctx.request.headers.authorization
+      const { child_id } = ctx.query
+      if (!child_id) return customError(ctx, 'child_id query is required')
+      const child = await strapi.entityService.findMany('api::child.child', child_id);
+      if (!child) return customError(ctx, 'child is not found')
+      const user = await parseJwt(token.split(' ')[1])
+      const _ = await strapi.entityService.findMany('api::parent.parent',{
+        filters: {
+          user: user.id
+        },
+        populate: '*'
+      });
+      const parent = _[0]
+      const children = parent.children.map(e => e.id)
+      const isHaveChildInParent = children.includes(+child_id)
+      if(!isHaveChildInParent) return customError(ctx, 'this child is not found` this parent')
+      const secret =  Math.floor(Math.random() * 90000) + 10000
+      const _child = await strapi.entityService.update('api::child.child', child_id, { data: { secret } });
+      return {
+        secret
+      }
     },
     async childConfirm (ctx) {
       const _body = {...ctx.request.body}

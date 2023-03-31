@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-03-09T06:32:46.420Z"
+    "x-generation-date": "2023-03-31T12:14:10.864Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -837,6 +837,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -1632,6 +1633,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -2460,6 +2462,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -3255,6 +3258,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -4104,6 +4108,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -4898,6 +4903,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -5725,6 +5731,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -6519,6 +6526,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -6699,7 +6707,8 @@
                   }
                 ],
                 "example": "string or id"
-              }
+              },
+              "permissions": {}
             }
           }
         }
@@ -7350,6 +7359,7 @@
                                             }
                                           }
                                         },
+                                        "permissions": {},
                                         "createdAt": {
                                           "type": "string",
                                           "format": "date-time"
@@ -7481,6 +7491,7 @@
                   }
                 }
               },
+              "permissions": {},
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -8173,6 +8184,7 @@
                                             }
                                           }
                                         },
+                                        "permissions": {},
                                         "createdAt": {
                                           "type": "string",
                                           "format": "date-time"
@@ -8304,6 +8316,7 @@
                   }
                 }
               },
+              "permissions": {},
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -9029,6 +9042,7 @@
                                             }
                                           }
                                         },
+                                        "permissions": {},
                                         "createdAt": {
                                           "type": "string",
                                           "format": "date-time"
@@ -9160,6 +9174,7 @@
                   }
                 }
               },
+              "permissions": {},
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -9852,6 +9867,7 @@
                                             }
                                           }
                                         },
+                                        "permissions": {},
                                         "createdAt": {
                                           "type": "string",
                                           "format": "date-time"
@@ -9983,6 +9999,7 @@
                   }
                 }
               },
+              "permissions": {},
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -10744,6 +10761,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -11516,6 +11534,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -12321,6 +12340,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -13093,6 +13113,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -13921,6 +13942,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -14705,6 +14727,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -15522,6 +15545,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -16306,6 +16330,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -17165,6 +17190,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -18065,6 +18091,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -18998,6 +19025,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -19898,6 +19926,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -20859,6 +20888,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -21651,6 +21681,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -22476,6 +22507,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -23268,6 +23300,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -25486,6 +25519,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -26273,6 +26307,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -27093,6 +27128,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -27880,6 +27916,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -28716,6 +28753,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -29500,6 +29538,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -30317,6 +30356,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -31101,6 +31141,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -31939,6 +31980,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -32728,6 +32770,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -33550,6 +33593,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -34339,6 +34383,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -35218,6 +35263,7 @@
                                 }
                               }
                             },
+                            "permissions": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -36022,6 +36068,7 @@
                                 }
                               }
                             },
+                            "permissions": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -36859,6 +36906,7 @@
                                 }
                               }
                             },
+                            "permissions": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -37663,6 +37711,7 @@
                                 }
                               }
                             },
+                            "permissions": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -38503,6 +38552,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -39289,6 +39339,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -40108,6 +40159,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -40894,6 +40946,7 @@
                               }
                             }
                           },
+                          "permissions": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
