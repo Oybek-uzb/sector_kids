@@ -2,6 +2,7 @@
 
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
+const lodash = require('lodash')
 /**
  * child controller
  */
@@ -92,7 +93,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       const token = ctx.request.headers.authorization
       const { child_id } = ctx.query
       if (!child_id) return customError(ctx, 'child_id query is required')
-      const child = await strapi.entityService.findMany('api::child.child', child_id);
+      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: '*' });
       if (!child) return customError(ctx, 'child is not found')
       const user = await parseJwt(token.split(' ')[1])
       const _ = await strapi.entityService.findMany('api::parent.parent',{
@@ -106,7 +107,10 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       const isHaveChildInParent = children.includes(+child_id)
       if(!isHaveChildInParent) return customError(ctx, 'this child is not found` this parent')
       const secret =  Math.floor(Math.random() * 90000) + 10000
-      const _child = await strapi.entityService.update('api::child.child', child_id, { data: { secret } });
+      await strapi.entityService.update('api::child.child', child_id, { data: { secret,
+          token: getService('jwt').issue({
+            id: child.user.id,
+          })} });
       return {
         secret
       }
@@ -129,6 +133,19 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         token: child.token,
         id: child.id
       }
+    },
+    async changePermissions (ctx) {
+      const token = ctx.request.headers.authorization
+      const user = await parseJwt(token.split(' ')[1])
+      const _body = {...ctx.request.body}
+      const { permissions } = _body
+      if (!permissions) return customError(ctx, 'permissions is required')
+      if (!lodash.isArray(permissions)) return customError(ctx, 'permissions must be array')
+      if (lodash.isEmpty(permissions)) return customError(ctx, 'permissions is empty')
+      const childData = await strapi.entityService.findMany('api::child.child', { filters: { user: user.id } });
+      const child = childData[0]
+      const _updated = await strapi.entityService.update('api::child.child', child.id, { data: { permissions } });
+      return _updated
     }
   }
 ))
