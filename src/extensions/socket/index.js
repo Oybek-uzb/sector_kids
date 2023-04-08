@@ -88,7 +88,7 @@ io.on('connection', async (socket) => {
     } else if (role === 1) {
       let childID = data.childID || null;
       const parent = await findParent(user.id)
-      const children = parent.children.filters(c => childID ? c.id === childID : true)
+      const children = parent.children.filter(c => childID ? c.id === childID : true)
       for (let i = 0; i < children.length; i++) {
         const child = await strapi.entityService.findOne('api::child.child', children[i].id, { populate: 'user' });
 
