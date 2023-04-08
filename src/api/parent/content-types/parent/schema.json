@@ -40,6 +40,10 @@
     },
     "inps": {
       "type": "string"
+    },
+    "isOnline": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
