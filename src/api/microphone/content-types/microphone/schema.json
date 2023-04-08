@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "microphones",
+  "info": {
+    "singularName": "microphone",
+    "pluralName": "microphones",
+    "displayName": "microphone"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    },
+    "name": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "size": {
+      "type": "biginteger"
+    },
+    "date": {
+      "type": "biginteger"
+    }
+  }
+}
