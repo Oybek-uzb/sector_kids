@@ -2,6 +2,7 @@ console.log('Socket server')
 const HashMap = require('hashmap');
 const clients = new HashMap();
 const io = require('socket.io')(strapi.server.httpServer, {
+  allowEIO3: true,
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
