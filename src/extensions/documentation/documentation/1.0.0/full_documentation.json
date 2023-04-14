@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-04-14T06:54:21.415Z"
+    "x-generation-date": "2023-04-14T09:46:26.184Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -28,7 +28,7 @@
   },
   "servers": [
     {
-      "url": "https://kid.datagaze.uz/api",
+      "url": "https://kids.datagaze-lab.uz/api",
       "description": "Production server"
     },
     {

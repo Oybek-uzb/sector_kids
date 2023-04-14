@@ -60,17 +60,21 @@ const findParent = async (id) => {
   return items && items[0] ? items[0] : null
 }
 io.on('connection', async (socket) => {
-  let clientParams = socket.handshake.query;
-  let clientAddress = socket.request.connection;
-  let clientIP = clientAddress.remoteAddress.substring(clientAddress.remoteAddress.lastIndexOf(':') + 1);
-  const token = clientParams.token
-  if (!token) io.to(socket.id).emit('error', 'token required')
-  const user = await strapi.plugins['users-permissions'].services.jwt.verify(token)
-  clients.set(+user.id, socket.id)
-  const _user = await findUser(user.id)
-  await updateUser(user.id, { ip: clientIP, isOnline: true })
-  const __user = clients.search(socket.id);
-  console.log('connected', __user)
+  try {
+    let clientParams = socket.handshake.query;
+    let clientAddress = socket.request.connection;
+    let clientIP = clientAddress.remoteAddress.substring(clientAddress.remoteAddress.lastIndexOf(':') + 1);
+    const token = clientParams.token
+    if (!token) io.to(socket.id).emit('error', 'token required')
+    const user = await strapi.plugins['users-permissions'].services.jwt.verify(token)
+    clients.set(+user.id, socket.id)
+    const _user = await findUser(user.id)
+    await updateUser(user.id, { ip: clientIP, isOnline: true })
+    const __user = clients.search(socket.id);
+    console.log('connected', __user)
+  } catch (e) {
+    io.to(socket.id).emit('error', e)
+  }
 
   socket.on('sos', async (data) => {
     const userId = clients.search(socket.id);
