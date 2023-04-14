@@ -72,9 +72,6 @@ io.on('connection', async (socket) => {
   const __user = clients.search(socket.id);
   console.log('connected', __user)
 
-
-
-
   socket.on('sos', async (data) => {
     const userId = clients.search(socket.id);
     const user = await findUser(userId)

@@ -1,7 +1,7 @@
 {
   "servers": [
     {
-      "url": "https://kid.datagaze.uz/api",
+      "url": "https://kids.datagaze-lab.uz/api",
       "description": "Production server"
     },
     {
