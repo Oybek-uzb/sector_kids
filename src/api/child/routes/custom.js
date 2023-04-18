@@ -21,5 +21,12 @@ module.exports = {
       config: {
       }
     },
+    {
+      method: 'GET',
+      path: '/children/my-children',
+      handler: 'child.getMyChildren',
+      config: {
+      }
+    },
   ]
 }

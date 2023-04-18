@@ -146,6 +146,18 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       const child = childData[0]
       const _updated = await strapi.entityService.update('api::child.child', child.id, { data: { permissions } });
       return _updated
+    },
+    async getMyChildren (ctx) {
+      const token = ctx.request.headers.authorization
+      const user = await parseJwt(token.split(' ')[1])
+      const _ = await strapi.entityService.findMany('api::parent.parent',{
+        filters: {
+          user: user.id
+        },
+        populate: '*'
+      });
+      const parent = _[0]
+      return parent.children
     }
   }
 ))
