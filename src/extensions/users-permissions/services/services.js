@@ -97,7 +97,6 @@ module.exports = {
     }
   },
   async customRegisterService(ctx) {
-
     const _body = {...ctx.request.body}
 
     // const otpcode = Math.floor(Math.random() * 9000) + 1000;

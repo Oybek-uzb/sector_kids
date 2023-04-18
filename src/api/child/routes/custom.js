@@ -23,7 +23,7 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/children/my-children',
+      path: '/children/get/my',
       handler: 'child.getMyChildren',
       config: {
       }
