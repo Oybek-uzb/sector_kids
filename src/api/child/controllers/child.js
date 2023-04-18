@@ -147,17 +147,18 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       const _updated = await strapi.entityService.update('api::child.child', child.id, { data: { permissions } });
       return _updated
     },
-    async getMyChildren (ctx) {
+    async deleteChild (ctx) {
       const token = ctx.request.headers.authorization
       const user = await parseJwt(token.split(' ')[1])
-      const _ = await strapi.entityService.findMany('api::parent.parent',{
-        filters: {
-          user: user.id
-        },
-        populate: '*'
-      });
-      const parent = _[0]
-      return parent.children
+      const { child_id } = ctx.params
+      if (!child_id) return customError(ctx, 'child_id param is required')
+      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: '*' });
+      if (!child) return customError(ctx, 'child is not found')
+      await strapi.entityService.delete('api::child.child', child_id);
+      return {
+        success: true,
+        message: 'child deleted'
+      }
     }
   }
 ))

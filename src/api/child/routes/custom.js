@@ -22,11 +22,11 @@ module.exports = {
       }
     },
     {
-      method: 'GET',
-      path: '/children/get/my',
-      handler: 'child.getMyChildren',
+      method: 'DELETE',
+      path: '/children/delete/:child_id',
+      handler: 'child.deleteChild',
       config: {
       }
-    },
+    }
   ]
 }
