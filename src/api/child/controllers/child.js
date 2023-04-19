@@ -24,7 +24,6 @@ async function parseJwt (token, ctx) {
   }
 }
 
-
 module.exports = createCoreController('api::child.child', ({strapi}) => ({
     async find(ctx) {
       const _query = {...ctx.query}
@@ -77,7 +76,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           ..._user
         },
       });
-      const child = await strapi.entityService.create('api::child.child', {
+      return strapi.entityService.create('api::child.child', {
         data: {
           ..._body,
           token: getService('jwt').issue({
@@ -87,7 +86,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           secret: Math.floor(Math.random() * 90000) + 10000
         },
       });
-      return child
     },
     async getSecret(ctx) {
       const token = ctx.request.headers.authorization
@@ -144,20 +142,30 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       if (lodash.isEmpty(permissions)) return customError(ctx, 'permissions is empty')
       const childData = await strapi.entityService.findMany('api::child.child', { filters: { user: user.id } });
       const child = childData[0]
-      const _updated = await strapi.entityService.update('api::child.child', child.id, { data: { permissions } });
-      return _updated
+      return await strapi.entityService.update('api::child.child', child.id, {data: {permissions}})
     },
     async deleteChild (ctx) {
-      const token = ctx.request.headers.authorization
-      const user = await parseJwt(token.split(' ')[1])
       const { child_id } = ctx.params
       if (!child_id) return customError(ctx, 'child_id param is required')
-      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: '*' });
+      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: { user: true } });
       if (!child) return customError(ctx, 'child is not found')
       await strapi.entityService.delete('api::child.child', child_id);
+      await strapi.entityService.delete('plugin::users-permissions.user', child.user.id);
       return {
         success: true,
         message: 'child deleted'
+      }
+    },
+    async updateChild (ctx) {
+      const { child_id } = ctx.params
+      if (!child_id) return customError(ctx, 'child_id param is required')
+      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: { user: true } });
+      if (!child) return customError(ctx, 'child is not found')
+      const reqBody = ctx.request.body
+      await strapi.entityService.update('api::child.child', child, { data: reqBody });
+      return {
+        success: true,
+        message: 'child updated'
       }
     }
   }

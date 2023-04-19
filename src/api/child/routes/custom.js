@@ -27,6 +27,13 @@ module.exports = {
       handler: 'child.deleteChild',
       config: {
       }
+    },
+    {
+      method: 'PUT',
+      path: '/children/update/:child_id',
+      handler: 'child.updateChild',
+      config: {
+      }
     }
   ]
 }
