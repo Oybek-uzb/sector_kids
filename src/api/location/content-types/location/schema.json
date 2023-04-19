@@ -29,6 +29,9 @@
     },
     "date": {
       "type": "biginteger"
+    },
+    "addressName": {
+      "type": "string"
     }
   }
 }

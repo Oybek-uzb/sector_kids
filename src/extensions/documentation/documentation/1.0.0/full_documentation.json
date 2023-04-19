@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-04-19T09:33:05.489Z"
+    "x-generation-date": "2023-04-19T12:21:14.223Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -28168,6 +28168,9 @@
                 "type": "string",
                 "pattern": "^\\d*$",
                 "example": "123456789"
+              },
+              "addressName": {
+                "type": "string"
               }
             }
           }
@@ -28914,6 +28917,9 @@
                 "type": "string",
                 "pattern": "^\\d*$",
                 "example": "123456789"
+              },
+              "addressName": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -29702,6 +29708,9 @@
                 "type": "string",
                 "pattern": "^\\d*$",
                 "example": "123456789"
+              },
+              "addressName": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",
@@ -30524,6 +30533,9 @@
                 "pattern": "^\\d*$",
                 "example": "123456789"
               },
+              "addressName": {
+                "type": "string"
+              },
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -31311,6 +31323,9 @@
                 "type": "string",
                 "pattern": "^\\d*$",
                 "example": "123456789"
+              },
+              "addressName": {
+                "type": "string"
               },
               "createdAt": {
                 "type": "string",

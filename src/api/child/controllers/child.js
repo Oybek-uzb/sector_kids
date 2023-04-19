@@ -54,7 +54,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       _user.username = _body.phone.slice(1)
       _user.password = _user.username + '_123'
       _user.email = _user.username + '@gmail.com'
-      _user.role = 1
+      _user.role = 4
 
       const _ = await strapi.entityService.findMany('plugin::users-permissions.user', {
         filters: {
