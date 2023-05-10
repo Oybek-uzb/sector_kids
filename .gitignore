@@ -113,6 +113,6 @@ exports
 dist
 build
 .strapi-updater.json
-docker-compose-postgres.yml
+docker-compose-*
 .env
 postgres-data
