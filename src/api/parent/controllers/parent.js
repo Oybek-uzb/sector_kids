@@ -77,18 +77,16 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       const found = children.findIndex(child => child.id === child_id)
       return found !== -1;
     },
+    async findEntity(ctx, entity) {
+      return strapi.service(`api::${entity}.${entity}`).find(ctx.query)
+    },
     async getEntity(ctx, entity) {
       const { child_id } = ctx.params
       if (!child_id) return customError(ctx, 'child_id param is required')
       const check = await this.isRealChild(ctx, +child_id)
       if (!check) return customError(ctx, 'child is not found')
 
-      return await strapi.entityService.findMany(`api::${entity}.${entity}`, {
-        filters: {
-          child: child_id
-        },
-        populate: { child: false }
-      });
+      return await this.findEntity(ctx, entity)
     },
     async getChildAppUsages (ctx) {
       return await this.getEntity(ctx, 'app-usage')

@@ -106,7 +106,7 @@ io.on('connection', async (socket) => {
   socket.on('command', async (data) => {
     const role = _user.role.id
     if (role !== 1) {
-      io.to(socket.id).emit('error', 'olny parent can send command')
+      io.to(socket.id).emit('error', 'only parent can send command')
       return
     }
     let childID = +data.childID
@@ -137,19 +137,5 @@ io.on('connection', async (socket) => {
       await updateUser(key, { isOnline: false })
     }
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 })
