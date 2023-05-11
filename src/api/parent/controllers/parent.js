@@ -73,6 +73,7 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         })
         return await customSuccess(ctx, children)
       } catch (err) {
+        strapi.log.error("error in function getChildrenV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -100,6 +101,7 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         await strapi.entityService.delete('plugin::users-permissions.user', parent.user.id);
         return await customSuccess(ctx, null)
       } catch(err) {
+        strapi.log.error("error in function deleteParentV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -127,6 +129,7 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         await strapi.entityService.update('api::parent.parent', parent_id, { data: reqBody });
         return await customSuccess(ctx, null)
       } catch (err) {
+        strapi.log.error("error in function updateParentV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -139,12 +142,19 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       return strapi.service(`api::${entity}.${entity}`).find(ctx.query)
     },
     async getEntity(ctx, entity) {
-      const { child_id } = ctx.params
-      if (!child_id) return customError(ctx, 'child_id param is required')
-      const check = await this.isRealChild(ctx, +child_id)
-      if (!check) return customError(ctx, 'child is not found')
+      try {
+        const { child_id } = ctx.params
+        if (!child_id) return await customError(ctx, 'child_id param is required', 400)
 
-      return await this.findEntity(ctx, entity)
+        const check = await this.isRealChild(ctx, +child_id)
+        if (!check) return await customError(ctx, 'child is not found', 404)
+
+        const foundEntity = await this.findEntity(ctx, entity)
+        return await customSuccess(ctx, foundEntity)
+      } catch (err) {
+        strapi.log.error("error in function getEntity, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
     },
     async getChildAppUsages (ctx) {
       return await this.getEntity(ctx, 'app-usage')
