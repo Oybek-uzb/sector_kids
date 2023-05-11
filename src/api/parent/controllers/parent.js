@@ -1,7 +1,7 @@
 'use strict';
 
 const jwt = require("jsonwebtoken");
-const { customError } = require('../../../utils/app-response')
+const { customError, customSuccess } = require('../../../utils/app-response')
 /**
  * parent controller
  */
@@ -50,24 +50,31 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       return parent.children
     },
     async getChildrenV2 (ctx) {
-      const token = ctx.request.headers.authorization
-      const { id } = await parseJwt(token.split(' ')[1])
-      const [ parent ] = await strapi.entityService.findMany('api::parent.parent', {
-        filters: {
-          user: id
-        },
-        // fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
-      })
-      if (!parent) {
-        return await customError(ctx, 'parent is not found', 404)
-      }
+      try {
+        const token = ctx.request.headers.authorization
+        if (!token) {
+          return await customError(ctx, 'authorization header is required', 403)
+        }
+        const { id } = await parseJwt(token.split(' ')[1])
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', {
+          filters: {
+            user: id
+          },
+        })
+        if (!parent) {
+          return await customError(ctx, 'parent is not found', 404)
+        }
 
-      return await strapi.entityService.findMany('api::child.child', {
-        filters: {
-          parent: parent.id
-        },
-        fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
-      })
+        const children = await strapi.entityService.findMany('api::child.child', {
+          filters: {
+            parent: parent.id
+          },
+          fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
+        })
+        return await customSuccess(ctx, children)
+      } catch (err) {
+        return await customError(ctx, 'internal server error', 500)
+      }
     },
     async deleteParent (ctx) {
       const { parent_id } = ctx.params
@@ -79,6 +86,21 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       return {
         success: true,
         message: 'parent deleted'
+      }
+    },
+    async deleteParentV2 (ctx) {
+      try {
+        const { parent_id } = ctx.params
+        if (!parent_id) return await customError(ctx, 'parent_id param is required', 400)
+
+        const parent = await strapi.entityService.findOne('api::parent.parent', parent_id, { populate: { user: true } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        await strapi.entityService.delete('api::parent.parent', parent_id);
+        await strapi.entityService.delete('plugin::users-permissions.user', parent.user.id);
+        return await customSuccess(ctx, null)
+      } catch(err) {
+        return await customError(ctx, 'internal server error', 500)
       }
     },
     async updateParent (ctx) {
