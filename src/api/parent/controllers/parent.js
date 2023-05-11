@@ -115,6 +115,21 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         message: 'parent updated'
       }
     },
+    async updateParentV2 (ctx) {
+      try {
+        const { parent_id } = ctx.params
+        if (!parent_id) return await customError(ctx, 'parent_id param is required', 400)
+
+        const parent = await strapi.entityService.findOne('api::parent.parent', parent_id, { populate: { user: true } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        const reqBody = ctx.request.body
+        await strapi.entityService.update('api::parent.parent', parent_id, { data: reqBody });
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
     async isRealChild (ctx, child_id) {
       const children = await this.getChildren(ctx)
       const found = children.findIndex(child => child.id === child_id)
