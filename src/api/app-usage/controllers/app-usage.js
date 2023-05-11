@@ -33,8 +33,7 @@ module.exports = createCoreController('api::app-usage.app-usage', ({strapi}) => 
       const _query = {...ctx.query}
       const _params = {...ctx.params}
       const {id} = _params
-      const res = await strapi.service('api::app-usage.app-usage').findOne(id, _query)
-      return res
+      return await strapi.service('api::app-usage.app-usage').findOne(id, _query)
     },
     async createMany(ctx) {
       const _body = {...ctx.request.body}

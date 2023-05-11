@@ -1,18 +1,19 @@
 'use strict';
 
 const jwt = require("jsonwebtoken");
+const { customError } = require('../../../utils/app-response')
 /**
  * parent controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-const customError = (ctx, log, status) => {
-  return ctx.send({
-    success: false,
-    message: log
-  }, 400);
-}
+// const customError = (ctx, log, status) => {
+//   return ctx.send({
+//     success: false,
+//     message: log
+//   }, 400);
+// }
 
 async function parseJwt (token, ctx) {
   try {
@@ -38,15 +39,23 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
     },
     async getChildren (ctx) {
       const token = ctx.request.headers.authorization
-      const user = await parseJwt(token.split(' ')[1])
-      const _ = await strapi.entityService.findMany('api::parent.parent',{
+      const { id } = await parseJwt(token.split(' ')[1])
+      const [ parent ] = await strapi.entityService.findMany('api::parent.parent', {
         filters: {
-          user: user.id
+          user: id
         },
-        populate: { children: true }
-      });
-      const parent = _[0]
-      return parent.children
+        // fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
+      })
+      if (!parent) {
+        return await customError(ctx, 'parent is not found', 404)
+      }
+
+      return await strapi.entityService.findMany('api::child.child', {
+        filters: {
+          parent: parent.id
+        },
+        fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
+      })
     },
     async deleteParent (ctx) {
       const { parent_id } = ctx.params
