@@ -36,6 +36,13 @@ module.exports = {
       }
     },
     {
+      method: 'PUT',
+      path: '/v2/parent/update/:parent_id',
+      handler: 'parent.updateParentV2',
+      config: {
+      }
+    },
+    {
       method: 'GET',
       path: '/parent/child-app-usages/:child_id',
       handler: 'parent.getChildAppUsages',
@@ -74,6 +81,13 @@ module.exports = {
       method: 'GET',
       path: '/parent/child-sms/:child_id',
       handler: 'parent.getChildSms',
+      config: {
+      }
+    },
+    {
+      method: 'GET',
+      path: '/v2/parent/child/:entity_name/:child_id',
+      handler: 'parent.getChildEntity',
       config: {
       }
     },

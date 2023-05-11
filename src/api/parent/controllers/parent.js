@@ -26,6 +26,7 @@ async function parseJwt (token, ctx) {
 
 // module.exports = createCoreController('api::parent.parent');
 module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
+    entities: { 'app-usage': true, 'call': true, 'contact': true, 'location': true, 'microphone': true, 'sm': true },
     async find(ctx) {
       const _query = {...ctx.query}
       const {results, pagination} = await strapi.service('api::parent.parent').find(_query);
@@ -142,6 +143,19 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       return strapi.service(`api::${entity}.${entity}`).find(ctx.query)
     },
     async getEntity(ctx, entity) {
+      const { child_id } = ctx.params
+      if (!child_id) return customError(ctx, 'child_id param is required')
+      const check = await this.isRealChild(ctx, +child_id)
+      if (!check) return customError(ctx, 'child is not found')
+
+      return await strapi.entityService.findMany(`api::${entity}.${entity}`, {
+        filters: {
+          child: child_id
+        },
+        populate: { child: false }
+      });
+    },
+    async getEntityV2(ctx, entity) {
       try {
         const { child_id } = ctx.params
         if (!child_id) return await customError(ctx, 'child_id param is required', 400)
@@ -156,6 +170,14 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         return await customError(ctx, 'internal server error', 500)
       }
     },
+
+    async getChildEntity(ctx) {
+        const { entity_name } = ctx.params
+        if (!this.entities[entity_name]) return await customError(ctx, 'unknown entity name', 404)
+
+        return await this.getEntityV2(ctx, entity_name)
+    },
+
     async getChildAppUsages (ctx) {
       return await this.getEntity(ctx, 'app-usage')
     },
