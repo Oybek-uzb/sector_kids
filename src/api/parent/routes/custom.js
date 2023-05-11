@@ -8,6 +8,13 @@ module.exports = {
       }
     },
     {
+      method: 'GET',
+      path: '/v2/parent/children',
+      handler: 'parent.getChildrenV2',
+      config: {
+      }
+    },
+    {
       method: 'DELETE',
       path: '/parent/delete/:parent_id',
       handler: 'parent.deleteParent',
