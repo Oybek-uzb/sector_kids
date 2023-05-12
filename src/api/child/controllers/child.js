@@ -3,17 +3,21 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
 const lodash = require('lodash')
+const { isValidPhoneNumber, phoneNumberWithoutPlus} = require('../../../utils/credential-validation')
+const { generateCode } = require('../../../utils/otp')
+const redis = require("../../../extensions/redis-client/main");
+const { customSuccess, customError } = require("../../../utils/app-response");
 /**
  * child controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
-const customError = (ctx, log, status) => {
-  return ctx.send({
-    success: false,
-    message: log
-  }, 400);
-}
+// const customError = (ctx, log, status) => {
+//   return ctx.send({
+//     success: false,
+//     message: log
+//   }, 400);
+// }
 
 async function parseJwt (token, ctx) {
   try {
@@ -86,6 +90,34 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           secret: Math.floor(Math.random() * 90000) + 10000
         },
       });
+    },
+    async registerChildOTPV2(ctx) {
+      try {
+        const { phone } = ctx.request.body
+        const isValidPhone = isValidPhoneNumber(phone)
+        if (!isValidPhone) {
+          return await customError(ctx, 'phone is not valid', 400)
+        }
+
+        const phoneWoP = phoneNumberWithoutPlus(phone)
+        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
+        if (doesExist) {
+          return await customError(ctx, msg, 409)
+        }
+
+        const occ = await redis.client.get(`${phoneWoP}_occ`) // occ -> otp child from child
+        if (occ) {
+          return await customError(ctx, 'try later (otp has already sent)', 403)
+        }
+
+        const generated = generateCode(5)
+        await redis.client.set(`${phoneWoP}_occ`, generated, 'EX', +process.env.REDIS_OTP_EX)
+
+        return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
+      } catch (err) {
+        strapi.log.error("error in function createChildV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
     },
     async getSecret(ctx) {
       const token = ctx.request.headers.authorization
@@ -167,6 +199,18 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         success: true,
         message: 'child updated'
       }
+    },
+    async checkForUserAlreadyExists (phone) {
+      const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+        filters: {
+          username: phone
+        }
+      })
+
+      if (user) {
+        return [true, 'phone number already exists']
+      }
+      return [false, '']
     }
   }
 ))

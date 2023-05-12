@@ -223,19 +223,18 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         }
 
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
-        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(ctx, phoneWoP)
+        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
         if (doesExist) {
           return await customError(ctx, msg, 409)
         }
 
-        const generated = generateCode(5)
-
-        const ocp = await redis.client.get(`${phoneWoP}_ocp`)
+        const ocp = await redis.client.get(`${phoneWoP}_ocp`) // ocp -> otp child from parent
         if (ocp) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
         }
 
-        await redis.client.set(`${phoneWoP}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX) // ocp -> otp child from parent
+        const generated = generateCode(5)
+        await redis.client.set(`${phoneWoP}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
       } catch(err) {
@@ -287,7 +286,7 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       }
       return [true, '']
     },
-    async checkForUserAlreadyExists (ctx, phone) {
+    async checkForUserAlreadyExists (phone) {
       const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
         filters: {
           username: phone

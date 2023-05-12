@@ -34,6 +34,13 @@ module.exports = {
       handler: 'child.updateChild',
       config: {
       }
+    },
+    {
+      method: 'POST',
+      path: '/v2/register-child-otp',
+      handler: 'child.registerChildOTPV2',
+      config: {
+      }
     }
   ]
 }
