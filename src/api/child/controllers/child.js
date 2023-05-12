@@ -91,9 +91,53 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         },
       });
     },
+    async registerChildV2(phone, name, age) {
+      const phoneWoP = phoneNumberWithoutPlus(phone)
+      try {
+        const user = {
+          username: phoneWoP,
+          password: phoneWoP + '_123',
+          email: phoneWoP + '@gmail.com',
+        }
+
+        const createdUser = await strapi.entityService.create('plugin::users-permissions.user', {
+          data: {
+            provider: 'local',
+            confirmed: true,
+            ...user
+          },
+        });
+
+        await strapi.entityService.create('api::child.child', {
+          data: {
+            name: name,
+            phone: phone,
+            age: age,
+            token: getService('jwt').issue({ id: createdUser.id }),
+            user: createdUser.id
+          },
+        });
+        return [true, '']
+      } catch (err) {
+        strapi.log.error("error in function registerChildV2, error: ", err)
+        return [false, err]
+      }
+    },
     async registerChildOTPV2(ctx) {
       try {
-        const { phone } = ctx.request.body
+        const { name, phone, age} = {...ctx.request.body}
+        const credentialsMap = new Map(
+          [
+            ['name', name],
+            ['phone', phone],
+            ['age', age],
+          ]
+        )
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
+        }
+
         const isValidPhone = isValidPhoneNumber(phone)
         if (!isValidPhone) {
           return await customError(ctx, 'phone is not valid', 400)
@@ -111,11 +155,11 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         }
 
         const generated = generateCode(5)
-        await redis.client.set(`${phoneWoP}_occ`, generated, 'EX', +process.env.REDIS_OTP_EX)
+        await redis.client.set(`${phoneWoP}_occ`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
       } catch (err) {
-        strapi.log.error("error in function createChildV2, error: ", err)
+        strapi.log.error("error in function registerChildOTPV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -141,13 +185,19 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
 
-        const ocp = await redis.client.get(`${phoneWoP}_occ`)
-        if (!ocp) {
+        const childData = await redis.client.get(`${phoneWoP}_occ`)
+        if (!childData) {
           return await customError(ctx, 'otp not found', 404)
         }
 
-        if (ocp !== otp) {
+        const parsedCHD = JSON.parse(childData)
+        if (parsedCHD.otp !== otp) {
           return await customError(ctx, 'otp is not valid', 403)
+        }
+
+        const [isRegistered, msg] = await this.registerChildV2(phone, parsedCHD.name, parsedCHD.age)
+        if (!isRegistered) {
+          return await customError(ctx, msg, 500)
         }
 
         return await customSuccess(ctx, null)

@@ -49,5 +49,12 @@ module.exports = {
       config: {
       }
     },
+    {
+      method: 'POST',
+      path: '/v2/register-child',
+      handler: 'child.registerChildV2',
+      config: {
+      }
+    }
   ]
 }

@@ -202,12 +202,10 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
 
     async createChild (ctx) {
       try {
-        const { name, child_phone, age } = ctx.request.body
+        const { child_phone } = ctx.request.body
 
         const credentialsMap = new Map(
           [
-            ['name', name],
-            ['age', age],
             ['child_phone', child_phone],
           ]
         )
