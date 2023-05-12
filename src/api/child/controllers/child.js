@@ -3,7 +3,7 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
 const lodash = require('lodash')
-const { isValidPhoneNumber, phoneNumberWithoutPlus} = require('../../../utils/credential-validation')
+const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential-validation')
 const { generateCode } = require('../../../utils/otp')
 const redis = require("../../../extensions/redis-client/main");
 const { customSuccess, customError } = require("../../../utils/app-response");
@@ -116,6 +116,43 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
       } catch (err) {
         strapi.log.error("error in function createChildV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async registerChildConfirmOTPV2(ctx) {
+      try {
+        const { otp, phone } = ctx.request.body
+        const credentialsMap = new Map(
+          [
+            ['otp', otp],
+            ['phone', phone],
+          ]
+        )
+
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
+        }
+
+        const isValidPhone = isValidPhoneNumber(phone)
+        if (!isValidPhone) {
+          return await customError(ctx, 'phone is not valid', 400)
+        }
+
+        const phoneWoP = phoneNumberWithoutPlus(phone)
+
+        const ocp = await redis.client.get(`${phoneWoP}_occ`)
+        if (!ocp) {
+          return await customError(ctx, 'otp not found', 404)
+        }
+
+        if (ocp !== otp) {
+          return await customError(ctx, 'otp is not valid', 403)
+        }
+
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function registerChildConfirmOTPV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },

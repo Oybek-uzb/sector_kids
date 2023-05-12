@@ -2,7 +2,7 @@
 
 const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
-const {isValidPhoneNumber, phoneNumberWithoutPlus} = require("../../../utils/credential-validation");
+const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require("../../../utils/credential-validation");
 const { generateCode } = require("../../../utils/otp");
 const redis = require('../../../extensions/redis-client/main')
 /**
@@ -212,9 +212,9 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
           ]
         )
 
-        const checkRequiredCredentials = await this.checkRequiredCredentials(ctx, credentialsMap)
-        if (!checkRequiredCredentials[0]) {
-          return await customError(ctx, checkRequiredCredentials[1], 400)
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
         }
 
         const isValidPhone = isValidPhoneNumber(child_phone)
@@ -223,11 +223,6 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         }
 
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
-        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
-        if (doesExist) {
-          return await customError(ctx, msg, 409)
-        }
-
         const ocp = await redis.client.get(`${phoneWoP}_ocp`) // ocp -> otp child from parent
         if (ocp) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
@@ -252,9 +247,9 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
           ]
         )
 
-        const checkRequiredCredentials = await this.checkRequiredCredentials(ctx, credentialsMap)
-        if (!checkRequiredCredentials[0]) {
-          return await customError(ctx, checkRequiredCredentials[1], 400)
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
         }
 
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
@@ -277,26 +272,6 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         strapi.log.error("error in function confirmChildOTP, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
-    },
-    async checkRequiredCredentials (ctx, credentialsMap) {
-      for (const [key, value] of credentialsMap) {
-        if (!value) {
-          return [false, `${key} field is required`]
-        }
-      }
-      return [true, '']
-    },
-    async checkForUserAlreadyExists (phone) {
-      const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
-        filters: {
-          username: phone
-        }
-      })
-
-      if (user) {
-        return [true, 'phone number already exists']
-      }
-      return [false, '']
     }
   }
 ))
