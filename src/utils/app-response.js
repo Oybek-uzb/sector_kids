@@ -11,13 +11,13 @@ module.exports = {
         message: msg,
         details: {}
       }
-    })
+    }, statusCode)
   },
   customSuccess: async (ctx, data) => {
     return await ctx.send({
       data: data,
       success: true,
       error: null,
-    })
+    }, 200)
   },
 }

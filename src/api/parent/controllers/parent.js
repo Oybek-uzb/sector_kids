@@ -2,6 +2,9 @@
 
 const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
+const {isValidPhoneNumber, phoneNumberWithoutPlus} = require("../../../utils/credential-validation");
+const {generateOtp} = require("../../../utils/otp");
+const redis = require('../../../extensions/redis-client/main')
 /**
  * parent controller
  */
@@ -166,7 +169,7 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         const foundEntity = await this.findEntity(ctx, entity)
         return await customSuccess(ctx, foundEntity)
       } catch (err) {
-        strapi.log.error("error in function getEntity, error: ", err)
+        strapi.log.error("error in function getEntityV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -196,5 +199,62 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
     async getChildSms (ctx) {
       return await this.getEntity(ctx, 'sm')
     },
+
+    async createChild (ctx) {
+      try {
+        const { name, child_phone, age } = ctx.request.body
+
+        const credentialsMap = new Map(
+          [
+            ['name', name],
+            ['age', age],
+            ['child_phone', child_phone],
+          ]
+        )
+
+        const checkRequiredCredentials = await this.checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRequiredCredentials[0]) {
+          return await customError(ctx, checkRequiredCredentials[1], 400)
+        }
+
+        const isValidPhone = isValidPhoneNumber(child_phone)
+        if (!isValidPhone) {
+          return await customError(ctx, 'phone number is not valid', 400)
+        }
+
+        const phoneWoP = phoneNumberWithoutPlus(child_phone)
+        const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+          filters: {
+            username: phoneWoP
+          }
+        })
+
+        if (user) {
+          return await customError(ctx, 'phone number already exists', 409)
+        }
+
+        const generated = generateOtp(5)
+
+        const ocp = await redis.client.get(`${phoneWoP}_ocp`)
+        if (ocp) {
+          return await customError(ctx, 'try later (otp has already sent)', 403)
+        }
+
+        await redis.client.set(`${phoneWoP}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX) // ocp -> otp child from parent
+
+        return await customSuccess(ctx, { secret: generated }) // TODO don't send OTP as response
+      } catch(err) {
+        strapi.log.error("error in function createChild, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async checkRequiredCredentials (ctx, credentialsMap) {
+      for (const [key, value] of credentialsMap) {
+        if (!value) {
+          return [false, `${key} is required`]
+        }
+      }
+      return [true, '']
+    }
   }
 ))

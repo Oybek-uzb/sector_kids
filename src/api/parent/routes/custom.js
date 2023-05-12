@@ -91,5 +91,12 @@ module.exports = {
       config: {
       }
     },
+    {
+      method: 'POST',
+      path: '/v2/parent/create-child',
+      handler: 'parent.createChild',
+      config: {
+      }
+    }
   ]
 }

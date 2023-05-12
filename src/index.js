@@ -1,5 +1,5 @@
 'use strict';
-const socket = require('./extensions/socket')
+
 const redis = require('./extensions/redis-client/main')
 
 module.exports = {
@@ -9,12 +9,11 @@ module.exports = {
    *
    * This gives you an opportunity to extend code.
    */
-  register: async function (/*{ strapi }*/) {
+  register: async function ({ strapi }) {
     try {
       await redis.registerClient(process.env);
-      redis.client.set('newKey', 'newValue');
     } catch (err) {
-      console.log("Error while connecting to Redis, error: ", err);
+      strapi.log.error("error while connecting to Redis, error: ", err);
     }
   },
 
