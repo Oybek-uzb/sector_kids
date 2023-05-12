@@ -97,6 +97,13 @@ module.exports = {
       handler: 'parent.createChild',
       config: {
       }
-    }
+    },
+    {
+      method: 'POST',
+      path: '/v2/parent/confirm-child-otp',
+      handler: 'parent.confirmChildOTP',
+      config: {
+      }
+    },
   ]
 }
