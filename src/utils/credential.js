@@ -1,3 +1,4 @@
+const {customError} = require("./app-response");
 module.exports = {
   isValidPhoneNumber: (phoneNumber) => {
     return /^[+]998\d{9}$/.test(phoneNumber)
@@ -10,5 +11,12 @@ module.exports = {
       }
     }
     return [true, '']
+  },
+  getUserIdFromToken: async (ctx) => {
+    const token = ctx.request.headers.authorization
+    if (!token) {
+      return await customError(ctx, 'authorization header is required', 403)
+    }
+    const { id } = await parseJwt(token.split(' ')[1])
   }
 }

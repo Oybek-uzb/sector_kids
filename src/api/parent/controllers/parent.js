@@ -2,7 +2,7 @@
 
 const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
-const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require("../../../utils/credential-validation");
+const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require("../../../utils/credential");
 const { generateCode } = require("../../../utils/otp");
 const redis = require('../../../extensions/redis-client/main')
 /**
@@ -20,15 +20,14 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 async function parseJwt (token, ctx) {
   try {
-    const _ = jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
-    return _
+    return jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
   } catch (e) {
     return e
   }
 }
 
 // module.exports = createCoreController('api::parent.parent');
-module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
+module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
     entities: { 'app-usage': true, 'call': true, 'contact': true, 'location': true, 'microphone': true, 'sm': true },
     async find(ctx) {
       const _query = {...ctx.query}
@@ -200,8 +199,11 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
       return await this.getEntity(ctx, 'sm')
     },
 
-    async createChild (ctx) {
+    async connectChild (ctx) {
       try {
+        const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
+        if (!isExits) return await customError(ctx, msgId, statusCode)
+
         const { child_phone } = ctx.request.body
 
         const credentialsMap = new Map(
@@ -221,22 +223,32 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
         }
 
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
-        const ocp = await redis.client.get(`${phoneWoP}_ocp`) // ocp -> otp child from parent
+
+        const [ doesChildExist, msgChild, statusCodeChild] = await this.checkUserGet(phoneWoP)
+        if (!doesChildExist) return await customError(ctx, msgChild, statusCodeChild)
+
+        const ocp = await redis.client.get(`${msgChild.id}_${msgId}_ocp`) // ocp -> otp child from parent
         if (ocp) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
         }
 
         const generated = generateCode(5)
-        await redis.client.set(`${phoneWoP}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX)
+        await redis.client.set(`${msgChild.id}_${msgId}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX)
 
-        return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
+        return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
       } catch(err) {
-        strapi.log.error("error in function createChild, error: ", err)
+        strapi.log.error("error in function connectChild, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
     async confirmChildOTP (ctx) {
       try {
+        const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
+        if (!isExits) return await customError(ctx, msgId, statusCode)
+
+        const [ parent, msgParent, statusCodeParent] = await this.checkParentGet(msgId)
+        if (!parent) return await customError(ctx, msgParent, statusCodeParent)
+
         const { otp, child_phone } = ctx.request.body
         const credentialsMap = new Map(
           [
@@ -250,9 +262,17 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
           return await customError(ctx, checkRC[1], 400)
         }
 
+        const isValidPhone = isValidPhoneNumber(child_phone)
+        if (!isValidPhone) {
+          return await customError(ctx, 'phone number is not valid', 400)
+        }
+
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
 
-        const ocp = await redis.client.get(`${phoneWoP}_ocp`)
+        const [ doesChildExist, msgChild, statusCodeChild] = await this.checkUserGet(phoneWoP)
+        if (!doesChildExist) return await customError(ctx, msgChild, statusCodeChild)
+
+        const ocp = await redis.client.get(`${msgChild.id}_${msgId}_ocp`)
         if (!ocp) {
           return await customError(ctx, 'otp not found', 404)
         }
@@ -263,13 +283,49 @@ module.exports = createCoreController('api::parent.parent', ({strapi}) => ({
 
         const secret = generateCode(6)
 
-        await redis.client.set(`${phoneWoP}_pcs`, secret, 'EX', +process.env.REDIS_SECRET_EX) // pcs -> parent child secret
+        await redis.client.set(`${msgChild.id}_cps`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cps -> child parent secret
 
         return await customSuccess(ctx, { secret })
       } catch (err) {
         strapi.log.error("error in function confirmChildOTP, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
+    },
+    async checkTokenGetUserId(ctx) {
+      const token = ctx.request.headers.authorization
+      if (!token) {
+        return [false, 'authorization header is required', 403]
+      }
+      const { id } = await parseJwt(token.split(' ')[1])
+      if (!id) {
+        return [false, 'user is not found', 404]
+      }
+
+      return [true, id, null]
+    },
+    async checkUserGet(phoneWoP) {
+      const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+        filters: {
+          username: phoneWoP
+        }
+      });
+      if (!user) {
+        return [false, 'user is not found', 404]
+      }
+
+      return [true, user, null]
+    },
+    async checkParentGet(userId) {
+      const [ parent ] = await strapi.entityService.findMany('api::parent.parent', {
+        filters: {
+          user: userId
+        },
+      })
+      if (!parent) {
+        return [false, 'parent is not found', 404]
+      }
+
+      return [true, parent, null]
     }
   }
 ))

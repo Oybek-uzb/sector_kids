@@ -3,7 +3,7 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
 const lodash = require('lodash')
-const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential-validation')
+const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential')
 const { generateCode } = require('../../../utils/otp')
 const redis = require("../../../extensions/redis-client/main");
 const { customSuccess, customError } = require("../../../utils/app-response");
@@ -98,6 +98,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           username: phoneWoP,
           password: phoneWoP + '_123',
           email: phoneWoP + '@gmail.com',
+          role: 4
         }
 
         const createdUser = await strapi.entityService.create('plugin::users-permissions.user', {
@@ -108,16 +109,17 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           },
         });
 
+        const token = getService('jwt').issue({ id: createdUser.id })
         await strapi.entityService.create('api::child.child', {
           data: {
             name: name,
             phone: phone,
             age: age,
-            token: getService('jwt').issue({ id: createdUser.id }),
+            token: token,
             user: createdUser.id
           },
         });
-        return [true, '']
+        return [true, token]
       } catch (err) {
         strapi.log.error("error in function registerChildV2, error: ", err)
         return [false, err]
@@ -157,7 +159,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         const generated = generateCode(5)
         await redis.client.set(`${phoneWoP}_occ`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
 
-        return await customSuccess(ctx, { child_otp: generated }) // TODO don't send OTP as response
+        return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
       } catch (err) {
         strapi.log.error("error in function registerChildOTPV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
@@ -200,9 +202,58 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, msg, 500)
         }
 
-        return await customSuccess(ctx, null)
+        return await customSuccess(ctx, { token: msg });
       } catch (err) {
         strapi.log.error("error in function registerChildConfirmOTPV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async connectWithParentV2(ctx) {
+      try {
+        const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
+        if (!isExits) return await customError(ctx, msgId, statusCode)
+
+        const child = await this.getChildUser(ctx)
+        if (!child) {
+          return await customError(ctx, 'child not found', 401)
+        }
+
+        const [ doesExist, msgChild, statusCodeChild ] = await this.checkChildGet(msgId)
+        if (!doesExist) return await customError(ctx, msgChild, statusCodeChild)
+
+        const { secret } = ctx.request.body
+
+        const credentialsMap = new Map(
+          [
+            ['secret', secret]
+          ]
+        )
+
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
+        }
+
+        const secretParentId = await redis.client.get(`${msgId}_cps`) // cps -> child parent secret
+        if (!secretParentId) {
+          return await customError(ctx, 'connection is not found', 404)
+        }
+
+        const { secret: secretCode, parentId } = JSON.parse(secretParentId)
+
+        if (secretCode !== secret) {
+          return await customError(ctx, 'secret is not valid', 403)
+        }
+
+        await strapi.entityService.update('api::child.child', msgChild.id, {
+          data: {
+            parent: parentId
+          }
+        });
+
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function connectWithParentV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
@@ -298,6 +349,42 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         return [true, 'phone number already exists']
       }
       return [false, '']
+    },
+    async getChildUser (ctx) {
+      const token = ctx.request.headers.authorization
+      const user = await parseJwt(token.split(' ')[1])
+
+      const child = await strapi.entityService.findMany('api::child.child', {
+        filters: {
+          user: user.id
+        }
+      });
+      if (!child) return null
+      return child[0]
+    },
+    async checkTokenGetUserId(ctx) {
+      const token = ctx.request.headers.authorization
+      if (!token) {
+        return [false, 'authorization header is required', 403]
+      }
+      const { id } = await parseJwt(token.split(' ')[1])
+      if (!id) {
+        return [false, 'user is not found', 404]
+      }
+
+      return [true, id, null]
+    },
+    async checkChildGet(userId) {
+      const [ child ] = await strapi.entityService.findMany('api::child.child', {
+        filters: {
+          user: userId
+        },
+      })
+      if (!child) {
+        return [false, 'parent is not found', 404]
+      }
+
+      return [true, child, null]
     }
   }
 ))

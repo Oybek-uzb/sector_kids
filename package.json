@@ -16,7 +16,7 @@
     "@strapi/plugin-users-permissions": "4.6.1",
     "@strapi/strapi": "4.6.1",
     "colors": "^1.4.0",
-    "firebase-admin": "^11.6.0",
+    "firebase-admin": "^11.8.0",
     "hashmap": "^2.4.0",
     "ioredis": "^5.3.2",
     "md5": "^2.3.0",

@@ -116,3 +116,4 @@ build
 docker-compose-*
 .env
 postgres-data
+sector-kids-firebase-private-key.json

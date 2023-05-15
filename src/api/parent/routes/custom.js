@@ -93,8 +93,8 @@ module.exports = {
     },
     {
       method: 'POST',
-      path: '/v2/parent/create-child',
-      handler: 'parent.createChild',
+      path: '/v2/parent/connect-with-child',
+      handler: 'parent.connectChild',
       config: {
       }
     },
