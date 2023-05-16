@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const lodash = require('lodash')
 const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential')
 const { generateCode } = require('../../../utils/otp')
-const redis = require("../../../extensions/redis-client/main");
 const { customSuccess, customError } = require("../../../utils/app-response");
 /**
  * child controller
@@ -151,7 +150,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, msg, 409)
         }
 
-        const oc = await redis.client.get(`${phoneWoP}_oc`) // oc -> otp child
+        const oc = await strapi.redisClient.get(`${phoneWoP}_oc`) // oc -> otp child
         if (oc) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
         }
@@ -168,7 +167,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         }
 
         const generated = generateCode(5)
-        await redis.client.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
+        await strapi.redisClient.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
       } catch (err) {
@@ -198,7 +197,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
 
-        const childData = await redis.client.get(`${phoneWoP}_oc`)
+        const childData = await strapi.redisClient.get(`${phoneWoP}_oc`)
         if (!childData) {
           return await customError(ctx, 'otp not found', 404)
         }
@@ -245,7 +244,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, checkRC[1], 400)
         }
 
-        const secretParentId = await redis.client.get(`${msgId}_cs`) // cs -> connection secret
+        const secretParentId = await strapi.redisClient.get(`${msgId}_cs`) // cs -> connection secret
         if (!secretParentId) {
           return await customError(ctx, 'connection is not found', 404)
         }

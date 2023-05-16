@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
 const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials, isValidPassportNumber, isValidINPS} = require("../../../utils/credential");
 const { generateCode } = require("../../../utils/otp");
-const redis = require('../../../extensions/redis-client/main')
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 /**
  * parent controller
@@ -204,7 +203,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         }
 
         const secret = generateCode(6)
-        await redis.client.set(`${msgChildUser.id}_cs`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cs -> connection secret
+        await strapi.redisClient.set(`${msgChildUser.id}_cs`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cs -> connection secret
 
         return await customSuccess(ctx, { secret })
       } catch(err) {
@@ -240,7 +239,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, msg, 409)
         }
 
-        const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
+        const op = await strapi.redisClient.get(`${phoneWoP}_op`) // op -> otp parent
         if (op) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
         }
@@ -259,7 +258,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         }
 
         const otpCode = generateCode(5)
-        await redis.client.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
+        await strapi.redisClient.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, { otp: otpCode })
       } catch(err) {
@@ -289,7 +288,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
 
-        const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
+        const op = await strapi.redisClient.get(`${phoneWoP}_op`) // op -> otp parent
         if (!op) {
           return await customError(ctx, 'otp not found', 404)
         }

@@ -13,7 +13,7 @@ module.exports = {
    */
   register: async function ({ strapi }) {
     try {
-      await redis.registerClient(process.env);
+      strapi.redisClient = await redis.registerClient(process.env);
     } catch (err) {
       strapi.log.error("error while connecting to Redis, error: ", err);
     }
@@ -27,6 +27,7 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   bootstrap({ strapi }) {
+
     let firebase = admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
