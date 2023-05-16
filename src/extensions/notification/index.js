@@ -1,7 +1,7 @@
 'use strict';
 
 const admin = require('firebase-admin');
-const serviceAccount = require("./sector-kids-firebase-config.json");
+const serviceAccount = require("../../../sector-kids-firebase-private-key.json");
 
 /**
  * `notifications` service.
