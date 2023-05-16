@@ -1,17 +1,12 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
 const {customSuccess, customError} = require("../../../utils/app-response");
+
 const roles = {
   parent: 1,
   child: 4
 }
 
-// const customError = (ctx, log, status) => {
-//   return ctx.send({
-//     success: false,
-//     message: log
-//   }, 400);
-// }
 async function parseJwt (token, ctx) {
   try {
     return jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))

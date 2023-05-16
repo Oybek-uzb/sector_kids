@@ -23,7 +23,7 @@ module.exports = {
     },
     {
       method: 'DELETE',
-      path: '/v2/parent/delete/:parent_id',
+      path: '/v2/parent/delete',
       handler: 'parent.deleteParentV2',
       config: {
       }
@@ -37,7 +37,7 @@ module.exports = {
     },
     {
       method: 'PUT',
-      path: '/v2/parent/update/:parent_id',
+      path: '/v2/parent/update',
       handler: 'parent.updateParentV2',
       config: {
       }

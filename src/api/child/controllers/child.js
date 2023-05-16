@@ -337,6 +337,24 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         message: 'child deleted'
       }
     },
+    async deleteChildV2 (ctx) {
+      try {
+        const { state } = ctx
+        if(!state.isAuthenticated) {
+          return await customError(ctx, 'unauthorized', 401)
+        }
+
+        const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
+        if (!child) return await customError(ctx, 'child is not found', 404)
+
+        await strapi.entityService.delete('api::child.child', child.id);
+        await strapi.entityService.delete('plugin::users-permissions.user', child.user.id);
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function deleteChildV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
     async updateChild (ctx) {
       const { child_id } = ctx.params
       if (!child_id) return customError(ctx, 'child_id param is required')
@@ -347,6 +365,25 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       return {
         success: true,
         message: 'child updated'
+      }
+    },
+    async updateChildV2 (ctx) {
+      try {
+        const { state } = ctx
+        if(!state.isAuthenticated) {
+          return await customError(ctx, 'unauthorized', 401)
+        }
+
+        const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
+        if (!child) return await customError(ctx, 'child is not found', 404)
+
+        const reqBody = ctx.request.body
+        await strapi.entityService.update('api::child.child', child.id, { data: reqBody });
+
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function updateChildV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
       }
     },
     async checkForUserAlreadyExists (phone) {

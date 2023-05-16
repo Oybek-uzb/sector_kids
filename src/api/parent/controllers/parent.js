@@ -93,22 +93,6 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         message: 'parent deleted'
       }
     },
-    async deleteParentV2 (ctx) {
-      try {
-        const { parent_id } = ctx.params
-        if (!parent_id) return await customError(ctx, 'parent_id param is required', 400)
-
-        const parent = await strapi.entityService.findOne('api::parent.parent', parent_id, { populate: { user: true } });
-        if (!parent) return await customError(ctx, 'parent is not found', 404)
-
-        await strapi.entityService.delete('api::parent.parent', parent_id);
-        await strapi.entityService.delete('plugin::users-permissions.user', parent.user.id);
-        return await customSuccess(ctx, null)
-      } catch(err) {
-        strapi.log.error("error in function deleteParentV2, error: ", err)
-        return await customError(ctx, 'internal server error', 500)
-      }
-    },
     async updateParent (ctx) {
       const { parent_id } = ctx.params
       if (!parent_id) return customError(ctx, 'parent_id param is required')
@@ -119,22 +103,6 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
       return {
         success: true,
         message: 'parent updated'
-      }
-    },
-    async updateParentV2 (ctx) {
-      try {
-        const { parent_id } = ctx.params
-        if (!parent_id) return await customError(ctx, 'parent_id param is required', 400)
-
-        const parent = await strapi.entityService.findOne('api::parent.parent', parent_id, { populate: { user: true } });
-        if (!parent) return await customError(ctx, 'parent is not found', 404)
-
-        const reqBody = ctx.request.body
-        await strapi.entityService.update('api::parent.parent', parent_id, { data: reqBody });
-        return await customSuccess(ctx, null)
-      } catch (err) {
-        strapi.log.error("error in function updateParentV2, error: ", err)
-        return await customError(ctx, 'internal server error', 500)
       }
     },
     async isRealChild (ctx, child_id) {
@@ -245,52 +213,59 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
       }
     },
     async registerParentOTPV2(ctx) {
-      const { phone, password } = ctx.request.body
+      try {
+        const { phone, password, name } = ctx.request.body
 
-      const credentialsMap = new Map(
-        [
-          ['phone', phone],
-          ['password', password],
-        ]
-      )
+        const credentialsMap = new Map(
+          [
+            ['phone', phone],
+            ['password', password],
+            ['name', name]
+          ]
+        )
 
-      const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
-      if (!checkRC[0]) {
-        return await customError(ctx, checkRC[1], 400)
+        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        if (!checkRC[0]) {
+          return await customError(ctx, checkRC[1], 400)
+        }
+
+        const isValidPhone = isValidPhoneNumber(phone)
+        if (!isValidPhone) {
+          return await customError(ctx, 'phone is not valid', 400)
+        }
+
+        const phoneWoP = phoneNumberWithoutPlus(phone)
+        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
+        if (doesExist) {
+          return await customError(ctx, msg, 409)
+        }
+
+        const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
+        if (op) {
+          return await customError(ctx, 'try later (otp has already sent)', 403)
+        }
+
+        const role = await this.getUserRoleByName('parent')
+        if (!role) {
+          return await customError(ctx, 'role parent not found', 404)
+        }
+
+        const userDTO = {
+          name: name,
+          username: phoneWoP,
+          email: phoneWoP + '@gmail.com',
+          role: role.id,
+          password: password,
+        }
+
+        const otpCode = generateCode(5)
+        await redis.client.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
+
+        return await customSuccess(ctx, { otp: otpCode })
+      } catch(err) {
+        strapi.log.error("error in function registerParentOTPV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
       }
-
-      const isValidPhone = isValidPhoneNumber(phone)
-      if (!isValidPhone) {
-        return await customError(ctx, 'phone is not valid', 400)
-      }
-
-      const phoneWoP = phoneNumberWithoutPlus(phone)
-      const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
-      if (doesExist) {
-        return await customError(ctx, msg, 409)
-      }
-
-      const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
-      if (op) {
-        return await customError(ctx, 'try later (otp has already sent)', 403)
-      }
-
-      const role = await this.getUserRoleByName('parent')
-      if (!role) {
-        return await customError(ctx, 'role parent not found', 404)
-      }
-
-      const userDTO = {
-        username: phoneWoP,
-        email: phoneWoP + '@gmail.com',
-        role: role.id,
-        password: password,
-      }
-
-      const otpCode = generateCode(5)
-      await redis.client.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
-
-      return await customSuccess(ctx, { otp: otpCode })
     },
     async confirmParentOTPV2 (ctx) {
       try {
@@ -348,7 +323,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         const token = getService('jwt').issue({ id: createdUser.id })
         await strapi.entityService.create('api::parent.parent', {
           data: {
-            name: user.username,
+            name: user.name,
             phone: phone,
             token: token,
             user: createdUser.id
@@ -358,6 +333,43 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
       } catch (err) {
         strapi.log.error("error in function registerParentV2, error: ", err)
         return [false, err]
+      }
+    },
+    async deleteParentV2 (ctx) {
+      try {
+        const { state } = ctx
+        if(!state.isAuthenticated) {
+          return await customError(ctx, 'unauthorized', 401)
+        }
+
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        await strapi.entityService.delete('api::parent.parent', parent.id);
+        await strapi.entityService.delete('plugin::users-permissions.user', parent.user.id);
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function deleteParentV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async updateParentV2 (ctx) {
+      try {
+        const { state } = ctx
+        if(!state.isAuthenticated) {
+          return await customError(ctx, 'unauthorized', 401)
+        }
+
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        const reqBody = ctx.request.body
+        await strapi.entityService.update('api::parent.parent', parent.id, { data: reqBody });
+
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function updateParentV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
       }
     },
     async checkTokenGetUserId(ctx) {
