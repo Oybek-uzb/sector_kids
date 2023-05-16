@@ -100,14 +100,14 @@ module.exports = {
     },
     {
       method: 'POST',
-      path: '/v2/parent/register',
+      path: '/v2/register-parent',
       handler: 'parent.registerParentOTPV2',
       config: {
       }
     },
     {
       method: 'POST',
-      path: '/v2/parent/confirm-otp',
+      path: '/v2/register-parent-confirm-otp',
       handler: 'parent.confirmParentOTPV2',
       config: {
       }

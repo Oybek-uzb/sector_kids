@@ -51,7 +51,7 @@ module.exports = {
     },
     {
       method: 'POST',
-      path: '/v2/connect-with-parent',
+      path: '/v2/child/connect-with-parent',
       handler: 'child.connectWithParentV2',
       config: {
       }
