@@ -2,7 +2,7 @@
 
 const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
-const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require("../../../utils/credential");
+const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials, isValidPassportNumber, isValidINPS} = require("../../../utils/credential");
 const { generateCode } = require("../../../utils/otp");
 const redis = require('../../../extensions/redis-client/main')
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
@@ -364,6 +364,20 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         if (!parent) return await customError(ctx, 'parent is not found', 404)
 
         const reqBody = ctx.request.body
+        const { passport, inps } = reqBody
+
+        if (passport) {
+          if (!isValidPassportNumber(passport)) {
+            return await customError(ctx, 'passport is not valid', 400)
+          }
+        }
+
+        if (inps) {
+          if (!isValidINPS(inps)) {
+            return await customError(ctx, 'inps is not valid', 400)
+          }
+        }
+
         await strapi.entityService.update('api::parent.parent', parent.id, { data: reqBody });
 
         return await customSuccess(ctx, null)
