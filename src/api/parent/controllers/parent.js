@@ -5,6 +5,7 @@ const { customError, customSuccess } = require('../../../utils/app-response')
 const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require("../../../utils/credential");
 const { generateCode } = require("../../../utils/otp");
 const redis = require('../../../extensions/redis-client/main')
+const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 /**
  * parent controller
  */
@@ -204,6 +205,9 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
         if (!isExits) return await customError(ctx, msgId, statusCode)
 
+        const [ parent, msgParent, statusCodeParent] = await this.checkParentGet(msgId)
+        if (!parent) return await customError(ctx, msgParent, statusCodeParent)
+
         const { child_phone } = ctx.request.body
 
         const credentialsMap = new Map(
@@ -224,36 +228,77 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
 
         const phoneWoP = phoneNumberWithoutPlus(child_phone)
 
-        const [ doesChildExist, msgChild, statusCodeChild] = await this.checkUserGet(phoneWoP)
-        if (!doesChildExist) return await customError(ctx, msgChild, statusCodeChild)
+        const [ doesChildUserExist, msgChildUser, statusCodeChildUser] = await this.checkUserGet(phoneWoP)
+        if (!doesChildUserExist) return await customError(ctx, msgChildUser, statusCodeChildUser)
 
-        const ocp = await redis.client.get(`${msgChild.id}_${msgId}_ocp`) // ocp -> otp child from parent
-        if (ocp) {
-          return await customError(ctx, 'try later (otp has already sent)', 403)
+        if (msgChildUser.role.name.toLowerCase() !== 'child') {
+          return await customError(ctx, 'user is not child', 404)
         }
 
-        const generated = generateCode(5)
-        await redis.client.set(`${msgChild.id}_${msgId}_ocp`, generated, 'EX', +process.env.REDIS_OTP_EX)
+        const secret = generateCode(6)
+        await redis.client.set(`${msgChildUser.id}_cs`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cs -> connection secret
 
-        return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
+        return await customSuccess(ctx, { secret })
       } catch(err) {
         strapi.log.error("error in function connectChild, error: ", err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
-    async confirmChildOTP (ctx) {
+    async registerParentOTPV2(ctx) {
+      const { phone, password } = ctx.request.body
+
+      const credentialsMap = new Map(
+        [
+          ['phone', phone],
+          ['password', password],
+        ]
+      )
+
+      const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+      if (!checkRC[0]) {
+        return await customError(ctx, checkRC[1], 400)
+      }
+
+      const isValidPhone = isValidPhoneNumber(phone)
+      if (!isValidPhone) {
+        return await customError(ctx, 'phone is not valid', 400)
+      }
+
+      const phoneWoP = phoneNumberWithoutPlus(phone)
+      const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
+      if (doesExist) {
+        return await customError(ctx, msg, 409)
+      }
+
+      const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
+      if (op) {
+        return await customError(ctx, 'try later (otp has already sent)', 403)
+      }
+
+      const role = await this.getUserRoleByName('parent')
+      if (!role) {
+        return await customError(ctx, 'role parent not found', 404)
+      }
+
+      const userDTO = {
+        username: phoneWoP,
+        email: phoneWoP + '@gmail.com',
+        role: role.id,
+        password: password,
+      }
+
+      const otpCode = generateCode(5)
+      await redis.client.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
+
+      return await customSuccess(ctx, { otp: otpCode })
+    },
+    async confirmParentOTPV2 (ctx) {
       try {
-        const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
-        if (!isExits) return await customError(ctx, msgId, statusCode)
-
-        const [ parent, msgParent, statusCodeParent] = await this.checkParentGet(msgId)
-        if (!parent) return await customError(ctx, msgParent, statusCodeParent)
-
-        const { otp, child_phone } = ctx.request.body
+        const { otp, phone } = ctx.request.body
         const credentialsMap = new Map(
           [
             ['otp', otp],
-            ['child_phone', child_phone],
+            ['phone', phone],
           ]
         )
 
@@ -262,33 +307,57 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, checkRC[1], 400)
         }
 
-        const isValidPhone = isValidPhoneNumber(child_phone)
+        const isValidPhone = isValidPhoneNumber(phone)
         if (!isValidPhone) {
           return await customError(ctx, 'phone number is not valid', 400)
         }
 
-        const phoneWoP = phoneNumberWithoutPlus(child_phone)
+        const phoneWoP = phoneNumberWithoutPlus(phone)
 
-        const [ doesChildExist, msgChild, statusCodeChild] = await this.checkUserGet(phoneWoP)
-        if (!doesChildExist) return await customError(ctx, msgChild, statusCodeChild)
-
-        const ocp = await redis.client.get(`${msgChild.id}_${msgId}_ocp`)
-        if (!ocp) {
+        const op = await redis.client.get(`${phoneWoP}_op`) // op -> otp parent
+        if (!op) {
           return await customError(ctx, 'otp not found', 404)
         }
 
-        if (ocp !== otp) {
+        const parsedOp = JSON.parse(op)
+        if (parsedOp.otp !== otp) {
           return await customError(ctx, 'otp is not valid', 403)
         }
 
-        const secret = generateCode(6)
+        const [isRegistered, msg] = await this.registerParentV2(phone, parsedOp)
+        if (!isRegistered) {
+          return await customError(ctx, msg, 500)
+        }
 
-        await redis.client.set(`${msgChild.id}_cps`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cps -> child parent secret
-
-        return await customSuccess(ctx, { secret })
+        return await customSuccess(ctx, { token: msg })
       } catch (err) {
         strapi.log.error("error in function confirmChildOTP, error: ", err)
         return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async registerParentV2(phone, user) {
+      try {
+        const createdUser = await strapi.entityService.create('plugin::users-permissions.user', {
+          data: {
+            provider: 'local',
+            confirmed: true,
+            ...user
+          },
+        });
+
+        const token = getService('jwt').issue({ id: createdUser.id })
+        await strapi.entityService.create('api::parent.parent', {
+          data: {
+            name: user.username,
+            phone: phone,
+            token: token,
+            user: createdUser.id
+          },
+        });
+        return [true, token]
+      } catch (err) {
+        strapi.log.error("error in function registerParentV2, error: ", err)
+        return [false, err]
       }
     },
     async checkTokenGetUserId(ctx) {
@@ -307,7 +376,8 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
       const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
         filters: {
           username: phoneWoP
-        }
+        },
+        populate: ['role']
       });
       if (!user) {
         return [false, 'user is not found', 404]
@@ -326,6 +396,29 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
       }
 
       return [true, parent, null]
-    }
+    },
+    async getUserRoleByName(name) {
+      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
+
+      const [ role ] = await strapi.entityService.findMany('plugin::users-permissions.role', {
+        filters: {
+          name: capitalizedName
+        }
+      })
+
+      return role
+    },
+    async checkForUserAlreadyExists (phone) {
+      const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+        filters: {
+          username: phone
+        }
+      })
+
+      if (user) {
+        return [true, 'phone number already exists']
+      }
+      return [false, '']
+    },
   }
 ))

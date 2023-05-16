@@ -1,22 +1,20 @@
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
+const {customSuccess, customError} = require("../../../utils/app-response");
 const roles = {
   parent: 1,
   child: 4
 }
-const formatError = error => [
-  {messages: [{id: error.id, message: error.message, field: error.field}]},
-];
-const customError = (ctx, log, status) => {
-  return ctx.send({
-    success: false,
-    message: log
-  }, 400);
-}
+
+// const customError = (ctx, log, status) => {
+//   return ctx.send({
+//     success: false,
+//     message: log
+//   }, 400);
+// }
 async function parseJwt (token, ctx) {
   try {
-    const _ = jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
-    return _
+    return jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
   } catch (e) {
     return e
   }
@@ -29,7 +27,7 @@ const sanitizeOutput = (user) => {
 };
 const userFinder = async phone => {
   console.log('Phone', phone)
-  const _isPhonePlusMode = /^[+][9][9][8]\d{9}$/.test(phone)
+  const _isPhonePlusMode = /^[+]998\d{9}$/.test(phone)
   const _phone = _isPhonePlusMode ? phone.toString().slice(1).trim() : phone
   const users = await strapi.entityService.findMany(
     'plugin::users-permissions.user',
@@ -38,8 +36,39 @@ const userFinder = async phone => {
   return users && users.length ? users[0] : null
 }
 
+const responseFields = new Map([
+  ['parent', [ 'id', 'name', 'phone', 'info', 'deviceInfo', 'passport', 'inps', 'isOnline' ] ], // response fields for parent
+  ['child', ['id', 'name', 'age', 'imei', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'] ], // response fields for child
+]);
+
 
 module.exports = {
+  async meV2(ctx) {
+    try {
+      if (!ctx.state.user) {
+        return await customError(ctx, 'invalid token', 401);
+      }
+      const user_id = ctx.state.user.id
+      const { role } = ctx.state.user
+
+      const roleName = role.name.toLowerCase()
+
+      let [ person ] = await strapi.entityService.findMany(`api::${roleName}.${roleName}`, {
+        filters: { user: { id: user_id } },
+        fields: responseFields.get(roleName),
+      });
+
+      if (!person) {
+        return await customError(ctx, 'user not found', 404);
+      }
+
+      return await customSuccess(ctx, person)
+    } catch (err) {
+      strapi.log.error("error in function meV2, error: ", err)
+      return await customError(ctx, 'internal server error', 500)
+    }
+  },
+
   async me(ctx) {
     if (!ctx.state.user) {
       return ctx.unauthorized();

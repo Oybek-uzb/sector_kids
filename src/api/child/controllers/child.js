@@ -127,7 +127,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async registerChildOTPV2(ctx) {
       try {
-        const { name, phone, age} = {...ctx.request.body}
+        const { name, phone, age} = ctx.request.body
         const credentialsMap = new Map(
           [
             ['name', name],
@@ -151,13 +151,24 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, msg, 409)
         }
 
-        const occ = await redis.client.get(`${phoneWoP}_occ`) // occ -> otp child from child
-        if (occ) {
+        const oc = await redis.client.get(`${phoneWoP}_oc`) // oc -> otp child
+        if (oc) {
           return await customError(ctx, 'try later (otp has already sent)', 403)
         }
 
+        const role = await this.getUserRoleByName('child')
+        if (!role) {
+          return await customError(ctx, 'role child not found', 404)
+        }
+
+        const userDTO = {
+          name: name,
+          age: age,
+          role: role.id,
+        }
+
         const generated = generateCode(5)
-        await redis.client.set(`${phoneWoP}_occ`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
+        await redis.client.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
       } catch (err) {
@@ -187,7 +198,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
 
-        const childData = await redis.client.get(`${phoneWoP}_occ`)
+        const childData = await redis.client.get(`${phoneWoP}_oc`)
         if (!childData) {
           return await customError(ctx, 'otp not found', 404)
         }
@@ -234,7 +245,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, checkRC[1], 400)
         }
 
-        const secretParentId = await redis.client.get(`${msgId}_cps`) // cps -> child parent secret
+        const secretParentId = await redis.client.get(`${msgId}_cs`) // cs -> connection secret
         if (!secretParentId) {
           return await customError(ctx, 'connection is not found', 404)
         }
@@ -385,6 +396,17 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       }
 
       return [true, child, null]
-    }
+    },
+    async getUserRoleByName(name) {
+      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
+
+      const [ role ] = await strapi.entityService.findMany('plugin::users-permissions.role', {
+        filters: {
+          name: capitalizedName
+        }
+      })
+
+      return role
+    },
   }
 ))

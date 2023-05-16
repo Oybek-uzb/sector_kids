@@ -1,4 +1,4 @@
-const errorNames = { 404: 'NotFound', 403: 'Forbidden', 401: 'Unauthorized', 400: 'BadRequest', 500: 'Internal'}
+const errorNames = { 404: 'NotFound', 403: 'Forbidden', 401: 'Unauthorized', 400: 'BadRequest', 500: 'Internal', 409: 'Conflict' }
 
 module.exports = {
   customError: async (ctx, msg, statusCode) => {
