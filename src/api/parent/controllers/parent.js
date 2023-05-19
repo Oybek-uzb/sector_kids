@@ -3,7 +3,7 @@
 const jwt = require("jsonwebtoken");
 const { customError, customSuccess } = require('../../../utils/app-response')
 const {isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials, isValidPassportNumber, isValidINPS} = require("../../../utils/credential");
-const { generateCode } = require("../../../utils/otp");
+const { generateCode, sendSMS } = require("../../../utils/otp");
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 /**
  * parent controller
@@ -249,6 +249,12 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, 'role parent not found', 404)
         }
 
+        const otpCode = generateCode(5)
+        const res = await sendSMS(phoneWoP, otpCode)
+        if (!res.success) {
+          return await customError(ctx, res.message, res.statusCode)
+        }
+
         const userDTO = {
           name: name,
           username: phoneWoP,
@@ -257,10 +263,9 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           password: password,
         }
 
-        const otpCode = generateCode(5)
         await strapi.redisClient.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
 
-        return await customSuccess(ctx, { otp: otpCode })
+        return await customSuccess(ctx, null)
       } catch(err) {
         strapi.log.error("error in function registerParentOTPV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)

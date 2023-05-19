@@ -4,7 +4,7 @@ const {getService} = require("@strapi/plugin-users-permissions/server/utils");
 const jwt = require('jsonwebtoken');
 const lodash = require('lodash')
 const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential')
-const { generateCode } = require('../../../utils/otp')
+const { generateCode, sendSMS} = require('../../../utils/otp')
 const { customSuccess, customError } = require("../../../utils/app-response");
 /**
  * child controller
@@ -160,16 +160,21 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           return await customError(ctx, 'role child not found', 404)
         }
 
+        const generated = generateCode(5)
+        const res = await sendSMS(phoneWoP, generated)
+        if (!res.success) {
+          return await customError(ctx, res.message, res.statusCode)
+        }
+
         const userDTO = {
           name: name,
           age: age,
           role: role.id,
         }
 
-        const generated = generateCode(5)
         await strapi.redisClient.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
 
-        return await customSuccess(ctx, { otp: generated }) // TODO don't send OTP as response
+        return await customSuccess(ctx, null)
       } catch (err) {
         strapi.log.error("error in function registerChildOTPV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
