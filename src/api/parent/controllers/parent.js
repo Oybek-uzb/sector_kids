@@ -382,6 +382,47 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         return await customError(ctx, 'internal server error', 500)
       }
     },
+    async deleteChildV2 (ctx) {
+      try {
+        const { childId } = ctx.params
+        const { state } = ctx
+
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { populate: { user: true }, filters: { user: state.user?.id } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        const [ child ] = await strapi.entityService.findMany('api::child.child', { populate: { parent: true, user: true }, filters: { id: childId } });
+        if (!child) return await customError(ctx, 'child is not found', 404)
+
+        if (child.parent?.id !== parent.id) return await customError(ctx, 'can not delete this child, permission denied', 403)
+
+        await strapi.entityService.delete('api::child.child', child.id);
+        await strapi.entityService.delete('plugin::users-permissions.user', child.user.id);
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function deleteChildV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async removeConnectionV2 (ctx) {
+      try {
+        const { state } = ctx
+        const { childId } = ctx.params
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { populate: { user: true }, filters: { user: state.user?.id } });
+        if (!parent) return await customError(ctx, 'parent is not found', 404)
+
+        const [ child ] = await strapi.entityService.findMany('api::child.child', { populate: { parent: true, user: true }, filters: { id: childId } });
+        if (!child) return await customError(ctx, 'child is not found', 404)
+
+        if (child.parent?.id !== parent.id) return await customError(ctx, 'can not delete this child, permission denied', 403)
+
+        await strapi.entityService.update('api::child.child', child.id, { data: { parent: null } });
+
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error("error in function removeConnectionV2, error: ", err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
     async checkTokenGetUserId(ctx) {
       const token = ctx.request.headers.authorization
       if (!token) {

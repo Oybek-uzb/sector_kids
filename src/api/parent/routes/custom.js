@@ -111,6 +111,20 @@ module.exports = {
       handler: 'parent.confirmParentOTPV2',
       config: {
       }
+    },
+    {
+      method: 'DELETE',
+      path: '/v2/parent/delete-child/:childId',
+      handler: 'parent.deleteChildV2',
+      config: {
+      }
+    },
+    {
+      method: 'POST',
+      path: '/v2/parent/remove-connection/:childId',
+      handler: 'parent.removeConnectionV2',
+      config: {
+      }
     }
   ]
 }
