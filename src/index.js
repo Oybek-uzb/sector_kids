@@ -15,10 +15,15 @@ module.exports = {
   register: async function ({ strapi }) {
     try {
       strapi.redisClient = await redis.registerClient(process.env);
+    } catch (err) {
+      strapi.log.error("error while initializing Redis client, error: ", err);
+    }
+
+    try {
       strapi.firebase = await initializeFirebase();
       strapi.notification = await initializeNotificationService(strapi.firebase.messaging());
     } catch (err) {
-      strapi.log.error("error while connecting to Redis, error: ", err);
+      strapi.log.error("error while initializing notification, error: ", err);
     }
   },
 

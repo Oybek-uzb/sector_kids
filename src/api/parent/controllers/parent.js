@@ -183,7 +183,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           ]
         )
 
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -223,7 +223,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           ]
         )
 
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -281,7 +281,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           ]
         )
 
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -363,9 +363,6 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         if(!state.isAuthenticated) {
           return await customError(ctx, 'unauthorized', 401)
         }
-
-        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
-        if (!parent) return await customError(ctx, 'parent is not found', 404)
 
         const reqBody = ctx.request.body
         const { passport, inps } = reqBody

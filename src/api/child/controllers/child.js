@@ -126,7 +126,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async registerChildOTPV2(ctx) {
       try {
-        const { name, phone, age} = ctx.request.body
+        const { name, phone, age, info, deviceInfo, permissions } = ctx.request.body
         const credentialsMap = new Map(
           [
             ['name', name],
@@ -134,7 +134,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
             ['age', age],
           ]
         )
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -145,9 +145,17 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         }
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
+
         const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
         if (doesExist) {
-          return await customError(ctx, msg, 409)
+          const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+            filters: {
+              username: phoneWoP,
+            }
+          });
+
+          const token = getService('jwt').issue({ id: user.id })
+          return await customSuccess(ctx, { token: token })
         }
 
         const oc = await strapi.redisClient.get(`${phoneWoP}_oc`) // oc -> otp child
@@ -169,10 +177,12 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         const userDTO = {
           name: name,
           age: age,
-          role: role.id,
+          info: info,
+          deviceInfo: deviceInfo,
+          permissions: permissions,
         }
 
-        await strapi.redisClient.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, name: name, age: age }), 'EX', +process.env.REDIS_OTP_EX)
+        await strapi.redisClient.set(`${phoneWoP}_oc`, JSON.stringify({ otp: generated, ...userDTO }), 'EX', +process.env.REDIS_OTP_EX)
 
         return await customSuccess(ctx, null)
       } catch (err) {
@@ -190,7 +200,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           ]
         )
 
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -244,7 +254,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
           ]
         )
 
-        const checkRC = await checkRequiredCredentials(ctx, credentialsMap)
+        const checkRC = checkRequiredCredentials(credentialsMap)
         if (!checkRC[0]) {
           return await customError(ctx, checkRC[1], 400)
         }
@@ -343,11 +353,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async deleteChildV2 (ctx) {
       try {
-        const { state } = ctx
-        if(!state.isAuthenticated) {
-          return await customError(ctx, 'unauthorized', 401)
-        }
-
         const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
         if (!child) return await customError(ctx, 'child is not found', 404)
 
@@ -373,11 +378,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async updateChildV2 (ctx) {
       try {
-        const { state } = ctx
-        if(!state.isAuthenticated) {
-          return await customError(ctx, 'unauthorized', 401)
-        }
-
         const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
         if (!child) return await customError(ctx, 'child is not found', 404)
 
