@@ -93,6 +93,19 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     async registerChildV2(phone, name, age) {
       const phoneWoP = phoneNumberWithoutPlus(phone)
       try {
+        const [ foundUser ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
+          filters: {
+            $or: [
+              {
+                username: phoneWoP,
+              }
+            ],
+          }
+        });
+        if (foundUser) {
+          const token = getService('jwt').issue({ id: foundUser.id })
+          return [true, token]
+        }
         const user = {
           username: phoneWoP,
           password: phoneWoP + '_123',
@@ -145,18 +158,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         }
 
         const phoneWoP = phoneNumberWithoutPlus(phone)
-
-        const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
-        if (doesExist) {
-          const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
-            filters: {
-              username: phoneWoP,
-            }
-          });
-
-          const token = getService('jwt').issue({ id: user.id })
-          return await customSuccess(ctx, { token: token })
-        }
 
         const oc = await strapi.redisClient.get(`${phoneWoP}_oc`) // oc -> otp child
         if (oc) {
