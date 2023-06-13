@@ -213,7 +213,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
     },
     async registerParentOTPV2(ctx) {
       try {
-        const { phone, password, name } = ctx.request.body
+        const { phone, password, name, info, deviceInfo } = ctx.request.body
 
         const credentialsMap = new Map(
           [
@@ -261,6 +261,8 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           email: phoneWoP + '@gmail.com',
           role: role.id,
           password: password,
+          info: info,
+          deviceInfo: deviceInfo
         }
 
         await strapi.redisClient.set(`${phoneWoP}_op`, JSON.stringify({ ...userDTO, otp: otpCode }), 'EX', +process.env.REDIS_OTP_EX)
@@ -342,9 +344,6 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
     async deleteParentV2 (ctx) {
       try {
         const { state } = ctx
-        if(!state.isAuthenticated) {
-          return await customError(ctx, 'unauthorized', 401)
-        }
 
         const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
         if (!parent) return await customError(ctx, 'parent is not found', 404)
@@ -360,10 +359,6 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
     async updateParentV2 (ctx) {
       try {
         const { state } = ctx
-        if(!state.isAuthenticated) {
-          return await customError(ctx, 'unauthorized', 401)
-        }
-
         const reqBody = ctx.request.body
         const { passport, inps } = reqBody
 
@@ -379,7 +374,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           }
         }
 
-        await strapi.entityService.update('api::parent.parent', parent.id, { data: reqBody });
+        await strapi.entityService.update('api::parent.parent', state.user?.id, { data: reqBody });
 
         return await customSuccess(ctx, null)
       } catch (err) {

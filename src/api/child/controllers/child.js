@@ -353,6 +353,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async deleteChildV2 (ctx) {
       try {
+        const { state } = ctx
         const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
         if (!child) return await customError(ctx, 'child is not found', 404)
 
@@ -378,6 +379,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async updateChildV2 (ctx) {
       try {
+        const { state } = ctx
         const [ child ] = await strapi.entityService.findMany('api::child.child', { fields: ['id'], populate: { user: true }, filters: { user: state.user?.id } });
         if (!child) return await customError(ctx, 'child is not found', 404)
 
