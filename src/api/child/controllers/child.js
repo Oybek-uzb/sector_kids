@@ -6,90 +6,15 @@ const lodash = require('lodash')
 const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential')
 const { generateCode, sendSMS} = require('../../../utils/otp')
 const { customSuccess, customError } = require("../../../utils/app-response");
+const md5 = require("md5");
+const isArray = require("lodash/isArray");
 /**
  * child controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
-// const customError = (ctx, log, status) => {
-//   return ctx.send({
-//     success: false,
-//     message: log
-//   }, 400);
-// }
-
-async function parseJwt (token, ctx) {
-  try {
-    const _ = jwt.verify(token, strapi.config.get('plugin.users-permissions.jwtSecret'))
-    return _
-  } catch (e) {
-    return e
-  }
-}
-
-module.exports = createCoreController('api::child.child', ({strapi}) => ({
-    async find(ctx) {
-      const _query = {...ctx.query}
-      const {results, pagination} = await strapi.service('api::child.child').find(_query);
-      return {results, pagination};
-    },
-    async findOne(ctx) {
-      const _query = {...ctx.query}
-      const _params = {...ctx.params}
-      const {id} = _params
-      const res = await strapi.service('api::child.child').findOne(id, _query)
-      return res
-    },
-    async create(ctx) {
-      const _body = {...ctx.request.body}
-
-      if (!_body.name) return customError(ctx, 'name is required')
-      if (!_body.phone) return customError(ctx, 'phone is required')
-      if (!_body.age) return customError(ctx, 'age is required')
-      if (!_body.parent) return customError(ctx, 'parent id is required')
-      const _user = {}
-
-      const _isPhonePlusMode = /^[+][9][9][8]\d{9}$/.test(_body.phone)
-
-      if (!_isPhonePlusMode) {
-        return customError(ctx, 'Phone is not valid. Example: +998912345678')
-      }
-      _user.username = _body.phone.slice(1)
-      _user.password = _user.username + '_123'
-      _user.email = _user.username + '@gmail.com'
-      _user.role = 4
-
-      const _ = await strapi.entityService.findMany('plugin::users-permissions.user', {
-        filters: {
-          $or: [
-            {
-              username: _body.username,
-            }
-          ],
-        },
-        populate: 'role'
-      });
-      if (_ && _.length) {
-        return customError(ctx, 'Phone is already exist')
-      }
-      const createdUser = await strapi.entityService.create('plugin::users-permissions.user', {
-        data: {
-          provider: 'local',
-          confirmed: true,
-          ..._user
-        },
-      });
-      return strapi.entityService.create('api::child.child', {
-        data: {
-          ..._body,
-          token: getService('jwt').issue({
-            id: createdUser.id,
-          }),
-          user: createdUser.id,
-          secret: Math.floor(Math.random() * 90000) + 10000
-        },
-      });
-    },
+module.exports = createCoreController('api::child.child', ({ strapi}) => ({
+    entityTypes: { 'app-usage': true, 'call': true, 'contact': true, 'keylog': true, 'location': true, 'sms': true },
     async registerChildV2(phone, name, age) {
       const phoneWoP = phoneNumberWithoutPlus(phone)
       try {
@@ -236,9 +161,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
     },
     async connectWithParentV2(ctx) {
       try {
-        const [ isExits, msgId, statusCode] = await this.checkTokenGetUserId(ctx)
-        if (!isExits) return await customError(ctx, msgId, statusCode)
-
         const child = await this.getChildUser(ctx)
         if (!child) {
           return await customError(ctx, 'child not found', 401)
@@ -283,75 +205,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         return await customError(ctx, 'internal server error', 500)
       }
     },
-    async getSecret(ctx) {
-      const token = ctx.request.headers.authorization
-      const { child_id } = ctx.query
-      if (!child_id) return customError(ctx, 'child_id query is required')
-      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: '*' });
-      if (!child) return customError(ctx, 'child is not found')
-      const user = await parseJwt(token.split(' ')[1])
-      const _ = await strapi.entityService.findMany('api::parent.parent',{
-        filters: {
-          user: user.id
-        },
-        populate: '*'
-      });
-      const parent = _[0]
-      const children = parent.children.map(e => e.id)
-      const isHaveChildInParent = children.includes(+child_id)
-      if(!isHaveChildInParent) return customError(ctx, 'this child is not found` this parent')
-      const secret =  Math.floor(Math.random() * 90000) + 10000
-      await strapi.entityService.update('api::child.child', child_id, { data: { secret,
-          token: getService('jwt').issue({
-            id: child.user.id,
-          })} });
-      return {
-        secret
-      }
-    },
-    async childConfirm (ctx) {
-      const _body = {...ctx.request.body}
-      if (!_body.secret) return customError(ctx, 'secret is required')
-      const _ = await strapi.entityService.findMany('api::child.child', {
-        filters: {
-          secret: _body.secret
-        }
-      });
-      if (!_ || !_.length) return customError(ctx, 'child not found')
-      const child = await strapi.entityService.update('api::child.child',_[0].id, {
-        data: {
-          secret: Date.now()
-        }
-      })
-      return {
-        token: child.token,
-        id: child.id
-      }
-    },
-    async changePermissions (ctx) {
-      const token = ctx.request.headers.authorization
-      const user = await parseJwt(token.split(' ')[1])
-      const _body = {...ctx.request.body}
-      const { permissions } = _body
-      if (!permissions) return customError(ctx, 'permissions is required')
-      if (!lodash.isArray(permissions)) return customError(ctx, 'permissions must be array')
-      if (lodash.isEmpty(permissions)) return customError(ctx, 'permissions is empty')
-      const childData = await strapi.entityService.findMany('api::child.child', { filters: { user: user.id } });
-      const child = childData[0]
-      return await strapi.entityService.update('api::child.child', child.id, {data: {permissions}})
-    },
-    async deleteChild (ctx) {
-      const { child_id } = ctx.params
-      if (!child_id) return customError(ctx, 'child_id param is required')
-      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: { user: true } });
-      if (!child) return customError(ctx, 'child is not found')
-      await strapi.entityService.delete('api::child.child', child_id);
-      await strapi.entityService.delete('plugin::users-permissions.user', child.user.id);
-      return {
-        success: true,
-        message: 'child deleted'
-      }
-    },
     async deleteChildV2 (ctx) {
       try {
         const { state } = ctx
@@ -364,18 +217,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       } catch (err) {
         strapi.log.error("error in function deleteChildV2, error: ", err)
         return await customError(ctx, 'internal server error', 500)
-      }
-    },
-    async updateChild (ctx) {
-      const { child_id } = ctx.params
-      if (!child_id) return customError(ctx, 'child_id param is required')
-      const child = await strapi.entityService.findOne('api::child.child', child_id, { populate: { user: true } });
-      if (!child) return customError(ctx, 'child is not found')
-      const reqBody = ctx.request.body
-      await strapi.entityService.update('api::child.child', child, { data: reqBody });
-      return {
-        success: true,
-        message: 'child updated'
       }
     },
     async updateChildV2 (ctx) {
@@ -393,6 +234,53 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
         return await customError(ctx, 'internal server error', 500)
       }
     },
+    generateHash(entity, entityType, childId) {
+      switch (entityType) {
+        case 'app-usage':
+          return md5(entity.appName + entity.usagePercentage + entity.usageDuration + entity.day + childId + entity.date)
+        case 'call':
+          return md5(entity.date + entity.name + entity.callTime + entity.callDuration + entity.callType + entity.phoneNumber + childId)
+        case 'contact':
+          return md5(entity.date + entity.contactName + entity.phoneNumber + childId)
+        case 'keylog':
+          return md5(entity.msg + entity.packageName + entity.type + entity.date + childId)
+        case 'location':
+          return md5(entity.date + entity.latitude + entity.longitude + childId)
+        case 'sms':
+          return md5(entity.address + entity.msg + entity.type + entity.date + childId)
+      }
+    },
+    async createChildEntityMany(ctx) {
+      const { entityName } = ctx.params
+      if (!this.entityTypes[entityName]) return await customError(ctx, 'unknown entity name', 404)
+
+      return await this.createEntityManyV2(ctx, entityName)
+    },
+    async createEntityManyV2(ctx, entityTypeName) {
+      try {
+        const { data } = ctx.request.body
+        const { user } = ctx.state
+        if (!isArray(data)) return customError(ctx, 'data is required and must be array')
+        if (!data.length) return customError(ctx, 'data is empty')
+
+        const [ child ] = await strapi.entityService.findMany('api::child.child', { filters: { user: user.id } });
+        for await (const item of data) {
+          const hash = this.generateHash(item, entityTypeName, child.id)
+          const entityData = {
+            ...item,
+            child: child.id,
+            hash: hash
+          }
+          await strapi.entityService.create(`api::${entityTypeName}.${entityTypeName}`, {
+            data: entityData
+          });
+        }
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error(`error in function createEntityManyV2 while creating ${entityTypeName} entity, error: `, err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
     async checkForUserAlreadyExists (phone) {
       const [ user ] = await strapi.entityService.findMany('plugin::users-permissions.user', {
         filters: {
@@ -406,9 +294,7 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       return [false, '']
     },
     async getChildUser (ctx) {
-      const token = ctx.request.headers.authorization
-      const user = await parseJwt(token.split(' ')[1])
-
+      const { user } = ctx.state
       const child = await strapi.entityService.findMany('api::child.child', {
         filters: {
           user: user.id
@@ -416,18 +302,6 @@ module.exports = createCoreController('api::child.child', ({strapi}) => ({
       });
       if (!child) return null
       return child[0]
-    },
-    async checkTokenGetUserId(ctx) {
-      const token = ctx.request.headers.authorization
-      if (!token) {
-        return [false, 'authorization header is required', 403]
-      }
-      const { id } = await parseJwt(token.split(' ')[1])
-      if (!id) {
-        return [false, 'user is not found', 404]
-      }
-
-      return [true, id, null]
     },
     async checkChildGet(userId) {
       const [ child ] = await strapi.entityService.findMany('api::child.child', {
