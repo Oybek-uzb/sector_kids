@@ -14,7 +14,7 @@ const isArray = require("lodash/isArray");
 
 const { createCoreController } = require('@strapi/strapi').factories;
 module.exports = createCoreController('api::child.child', ({ strapi}) => ({
-    entityTypes: { 'app-usage': true, 'call': true, 'contact': true, 'keylog': true, 'location': true, 'sms': true },
+    entityTypes: { 'app-usage': true, 'call': true, 'contact': true, 'keylog': true, 'location': true, 'sm': true },
     async registerChildV2(phone, name, age) {
       const phoneWoP = phoneNumberWithoutPlus(phone)
       try {
