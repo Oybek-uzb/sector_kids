@@ -246,7 +246,7 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
           return md5(entity.msg + entity.packageName + entity.type + entity.date + childId)
         case 'location':
           return md5(entity.date + entity.latitude + entity.longitude + childId)
-        case 'sms':
+        case 'sm':
           return md5(entity.address + entity.msg + entity.type + entity.date + childId)
       }
     },
