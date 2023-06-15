@@ -4,6 +4,7 @@ const redis = require('./extensions/redis-client/main')
 const serviceAccount = require('../sector-kids-firebase-private-key.json')
 const admin = require('firebase-admin')
 const {initializeFirebase, initializeNotificationService} = require("./extensions/notification");
+const {configureSocketServer} = require("./extensions/socket");
 
 module.exports = {
   /**
@@ -24,6 +25,12 @@ module.exports = {
       strapi.notification = await initializeNotificationService(strapi.firebase.messaging());
     } catch (err) {
       strapi.log.error("error while initializing notification, error: ", err);
+    }
+
+    try {
+      await configureSocketServer(strapi.server.httpServer);
+    } catch (err) {
+      strapi.log.error("error while configuring socket server, error: ", err);
     }
   },
 
