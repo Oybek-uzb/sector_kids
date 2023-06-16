@@ -161,12 +161,13 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
     },
     async connectWithParentV2(ctx) {
       try {
+        const { user } = ctx.state
         const child = await this.getChildUser(ctx)
         if (!child) {
           return await customError(ctx, 'child not found', 401)
         }
 
-        const [ doesExist, msgChild, statusCodeChild ] = await this.checkChildGet(msgId)
+        const [ doesExist, msgChild, statusCodeChild ] = await this.checkChildGet(user.id)
         if (!doesExist) return await customError(ctx, msgChild, statusCodeChild)
 
         const { secret } = ctx.request.body
@@ -182,7 +183,7 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
           return await customError(ctx, checkRC[1], 400)
         }
 
-        const secretParentId = await strapi.redisClient.get(`${msgId}_cs`) // cs -> connection secret
+        const secretParentId = await strapi.redisClient.get(`${user.id}_cs`) // cs -> connection secret
         if (!secretParentId) {
           return await customError(ctx, 'connection is not found', 404)
         }
