@@ -73,7 +73,17 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
             parent: parent.id
           },
           fields: ['id', 'name', 'age', 'info', 'deviceInfo', 'isOnline', 'lastSeen', 'avatar', 'gender', 'phone'],
+          populate: {
+            user: true
+          }
         })
+
+        for (const child of children) {
+          const { id } = child.user
+          const isVoiceRecording = await strapi.redisClient.get(`${id}_vr`)
+          child['isVoiceRecording'] = isVoiceRecording ?? false
+        }
+
         return await customSuccess(ctx, children)
       } catch (err) {
         strapi.log.error("error in function getChildrenV2, error: ", err)
