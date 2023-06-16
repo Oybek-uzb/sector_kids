@@ -15,7 +15,7 @@ const events = {
 }
 const rolesGlobal = {}
 const updateUser = async function (user, { ip, isOnline }) {
-  const role = user.role.name
+  const role = user.role.name.toLowerCase()
   const data = {
     info: {
       ip: ip
@@ -226,14 +226,17 @@ module.exports = {
         const { user }  = socket
         clients.set(user.id, socket.id)
 
-        await updateUser(user, { ip: clientIP, isOnline: true })
+        const userRoleName = user.role.name.toLowerCase()
 
-        if (user.role.name.toLowerCase() === 'child') {
+        if (userRoleName === 'child') {
           const child = await findChildByUserId(user.id)
+          await updateUser(user, { isOnline: true, ip: clientIP })
           if (child.parent) {
             const parentUserSocketId = clients.get(child.parent.user.id)
             io.to(parentUserSocketId).emit('childOnline', customSocketSuccess({ childId: child.id }))
           }
+        } else if (userRoleName === 'parent') {
+          await updateUser(user, { ip: clientIP })
         }
         console.log(clients)
       } catch (e) {

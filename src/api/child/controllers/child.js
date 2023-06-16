@@ -1,8 +1,6 @@
 'use strict';
 
 const {getService} = require("@strapi/plugin-users-permissions/server/utils");
-const jwt = require('jsonwebtoken');
-const lodash = require('lodash')
 const { isValidPhoneNumber, phoneNumberWithoutPlus, checkRequiredCredentials} = require('../../../utils/credential')
 const { generateCode, sendSMS} = require('../../../utils/otp')
 const { customSuccess, customError } = require("../../../utils/app-response");
