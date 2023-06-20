@@ -247,8 +247,10 @@ module.exports = {
       socket.on('disconnect', async function () {
         try {
           let key = clients.search(socket.id);
+          console.log('disconnected', socket.id, key)
           const user = await findUser(key)
-          if (user.role.name.toLowerCase() === 'child') {
+          console.log('user: ', user)
+          if (user?.role.name.toLowerCase() === 'child') {
             const child = await findChildByUserId(key)
             if (child.parent) {
               const parentUserSocketId = clients.get(child.parent.user.id)
