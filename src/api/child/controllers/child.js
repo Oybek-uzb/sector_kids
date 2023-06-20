@@ -290,7 +290,7 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
       try {
         const { file } = ctx.request.files
         const body = ctx.request.body
-        const [ isFileUploaded , path ] = await uploadFile(file, 'microphones', child.id)
+        const [ isFileUploaded , path ] = await uploadFile(file, 'records', child.id)
         if (!isFileUploaded) {
           return await customError(ctx, 'error while uploading microphone', 500);
         }
