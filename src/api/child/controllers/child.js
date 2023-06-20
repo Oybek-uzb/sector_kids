@@ -290,6 +290,13 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
       try {
         const { file } = ctx.request.files
         const body = ctx.request.body
+        const { MAX_RECORD_SIZE } = process.env
+        if (!file) {
+          return await customError(ctx, 'file is required', 400)
+        }
+        if (file.size > (+MAX_RECORD_SIZE * 1024 * 1024)) {
+          return await customError(ctx, 'file size is too big', 400)
+        }
         const [ isFileUploaded , path ] = await uploadFile(file, 'records', child.id)
         if (!isFileUploaded) {
           return await customError(ctx, 'error while uploading microphone', 500);
