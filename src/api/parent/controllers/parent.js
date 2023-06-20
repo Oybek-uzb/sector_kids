@@ -243,6 +243,10 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, 'phone is not valid', 400)
         }
 
+        if (password.length < 6) {
+          return await customError(ctx, 'password is too short', 400)
+        }
+
         const phoneWoP = phoneNumberWithoutPlus(phone)
         const [ doesExist, msg ] = await this.checkForUserAlreadyExists(phoneWoP)
         if (doesExist) {
