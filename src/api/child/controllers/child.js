@@ -291,20 +291,22 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
         const { file } = ctx.request.files
         const body = ctx.request.body
         const { MAX_RECORD_SIZE } = process.env
+        const maxRecordSize = (parseInt(MAX_RECORD_SIZE) ?? 50) * 1024 * 1024 // 50 MB
         if (!file) {
           return await customError(ctx, 'file is required', 400)
         }
-        if (file.size > (+MAX_RECORD_SIZE * 1024 * 1024)) {
+        if (file.size > maxRecordSize) {
           return await customError(ctx, 'file size is too big', 400)
         }
-        const [ isFileUploaded , path ] = await uploadFile(file, 'records', child.id)
+        const [ isFileUploaded, path ] = await uploadFile(file, 'records', child.id)
         if (!isFileUploaded) {
           return await customError(ctx, 'error while uploading microphone', 500);
         }
         const entityData = {
           ...body,
           child: child.id,
-          path: path
+          path: path,
+          size: file.size // in bytes
         }
         await strapi.entityService.create('api::microphone.microphone', {
           data: entityData
