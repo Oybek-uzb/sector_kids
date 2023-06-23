@@ -388,7 +388,12 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           }
         }
 
-        await strapi.entityService.update('api::parent.parent', state.user?.id, { data: reqBody });
+        const [ parent ] = await strapi.entityService.findMany('api::parent.parent', { filters: { user: state.user?.id } });
+        if (!parent) {
+          return await customError(ctx, 'parent is not found', 404)
+        }
+
+        await strapi.entityService.update('api::parent.parent', parent.id, { data: reqBody });
 
         return await customSuccess(ctx, null)
       } catch (err) {
