@@ -297,7 +297,7 @@ module.exports = {
       socket.on('sos-from-child', async (data) => {
         try {
           const { user } = socket
-          const [ child ] = await findChildByUserId(user.id)
+          const child = await findChildByUserId(user.id)
           if (!child) {
             return io.to(socket.id).emit('error', customSocketError(404, 'child not found'))
           }
