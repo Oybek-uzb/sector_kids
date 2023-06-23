@@ -239,9 +239,9 @@ module.exports = {
           await updateUser(user, { ip: clientIP })
         }
         console.log(clients)
-      } catch (e) {
-        console.log(e)
-        io.to(socket.id).emit('error', customSocketError(500, e.message))
+      } catch (err) {
+        strapi.log.error('error in handler to event connection, err:', err)
+        io.to(socket.id).emit('error', customSocketError(500, err.message))
       }
 
       socket.on('disconnect', async function () {
@@ -265,11 +265,56 @@ module.exports = {
             clients.remove(key);
           }
         } catch (err) {
-          strapi.log.error(err)
+          strapi.log.error('error in handler to event disconnect, err:', err)
         }
       });
 
-      socket.on('sos', async (data) => {})
+      socket.on('sos-from-parent', async (data) => {
+        try {
+          const { user } = socket
+          const { childId } = JSON.parse(data)
+          if (!childId) {
+            return io.to(socket.id).emit('error', customSocketError(400, 'childId is empty'))
+          }
+
+          const [ isValidChild, child] = await isValidChildFn(childId, user.id)
+          if (!isValidChild) {
+            return io.to(socket.id).emit('error', customSocketError(404, 'child not found'))
+          }
+
+          const childSocketId = clients.get(child.user.id)
+          if (!childSocketId) {
+            return io.to(socket.id).emit('error', customSocketError(405, 'child is not online'))
+          }
+
+          io.to(childSocketId).emit('sos-from-parent', customSocketSuccess(null))
+        } catch (err) {
+          strapi.log.error('error in handler to event sos-from-parent, err:', err)
+          socket.emit('error', customSocketError(500, err.message))
+        }
+      })
+
+      socket.on('sos-from-child', async (data) => {
+        try {
+          const { user } = socket
+          const [ child ] = await findChildByUserId(user.id)
+          if (!child) {
+            return io.to(socket.id).emit('error', customSocketError(404, 'child not found'))
+          }
+          if (!child.parent) {
+            return io.to(socket.id).emit('error', customSocketError(404, 'parent not found'))
+          }
+          const parentUserSocketId = clients.get(child.parent.user.id)
+          if (!parentUserSocketId) {
+            return io.to(socket.id).emit('error', customSocketError(405, 'parent is not online'))
+          }
+
+          io.to(parentUserSocketId).emit('sos-from-child', customSocketSuccess({ childId: child.id }))
+        } catch (err) {
+          strapi.log.error('error in handler to event sos-from-child, err:', err)
+          socket.emit('error', customSocketError(500, err.message))
+        }
+      })
 
       socket.on('voice-record-start', async (data) => {
         try {
@@ -300,6 +345,7 @@ module.exports = {
           await strapi.redisClient.set(`${child.user.id}_vr`, true, 'EX', duration)
           io.to(childSocketId).emit('voice-record-start', customSocketSuccess({ duration: +duration }))
         } catch (err) {
+          strapi.log.error('error in handler to event voice-record-start, err:', err)
           socket.emit('error', customSocketError(500, err.message))
         }
       })
@@ -326,6 +372,7 @@ module.exports = {
             io.to(parentSocketId).emit('voice-record-done', customSocketSuccess({ fileName }))
           }
         } catch (err) {
+          strapi.log.error('error in handler to event voice-record-done, err:', err)
           socket.emit('error', customSocketError(500, err.message))
         }
       })
@@ -355,6 +402,7 @@ module.exports = {
           io.to(childSocketId).emit('voice-record-cancel', customSocketSuccess(null))
 
         } catch (err) {
+          strapi.log.error('error in handler to event voice-record-cancel, err:', err)
           socket.emit('error', customSocketError(500, err.message))
         }
       })
