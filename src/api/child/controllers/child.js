@@ -93,10 +93,20 @@ module.exports = createCoreController('api::child.child', ({ strapi}) => ({
           return await customError(ctx, 'role child not found', 404)
         }
 
-        const generated = generateCode(5)
-        const res = await sendSMS(phoneWoP, generated)
-        if (!res.success) {
-          return await customError(ctx, res.message, res.statusCode)
+        let generated = ""
+        let isFakePhone = false
+        const { CHILD_TEST_PHONE1, CHILD_TEST_PHONE2, CHILD_TEST_PHONE3, CHILD_TEST_PHONE4 } = process.env
+        if (phoneWoP === CHILD_TEST_PHONE1 || phoneWoP === CHILD_TEST_PHONE2 || phoneWoP === CHILD_TEST_PHONE3 || phoneWoP === CHILD_TEST_PHONE4) {
+          isFakePhone = true
+          generated = "55555"
+        } else {
+          generated = generateCode(5)
+        }
+        if (!isFakePhone) {
+          const res = await sendSMS(phoneWoP, generated)
+          if (!res.success) {
+            return await customError(ctx, res.message, res.statusCode)
+          }
         }
 
         const userDTO = {

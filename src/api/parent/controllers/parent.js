@@ -212,7 +212,13 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, 'user is not child', 404)
         }
 
-        const secret = generateCode(6)
+        let secret = ""
+        const { CHILD_TEST_PHONE1, CHILD_TEST_PHONE2, CHILD_TEST_PHONE3, CHILD_TEST_PHONE4 } = process.env
+        if (phoneWoP === CHILD_TEST_PHONE1 || phoneWoP === CHILD_TEST_PHONE2 || phoneWoP === CHILD_TEST_PHONE3 || phoneWoP === CHILD_TEST_PHONE4) {
+          secret = "666666"
+        } else {
+          secret = generateCode(6)
+        }
         await strapi.redisClient.set(`${msgChildUser.id}_cs`, JSON.stringify({ secret: secret, parentId: msgParent.id }), 'EX', +process.env.REDIS_SECRET_EX) // cs -> connection secret
 
         return await customSuccess(ctx, { secret })
@@ -263,10 +269,20 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
           return await customError(ctx, 'role parent not found', 404)
         }
 
-        const otpCode = generateCode(5)
-        const res = await sendSMS(phoneWoP, otpCode)
-        if (!res.success) {
-          return await customError(ctx, res.message, res.statusCode)
+        let otpCode = ""
+        let isFakePhone = false
+        const { PARENT_TEST_PHONE1, PARENT_TEST_PHONE2 } = process.env
+        if (phoneWoP === PARENT_TEST_PHONE1 || phoneWoP === PARENT_TEST_PHONE2) {
+          isFakePhone = true
+          otpCode = "55555"
+        } else {
+          otpCode = generateCode(5)
+        }
+        if (!isFakePhone) {
+          const res = await sendSMS(phoneWoP, otpCode)
+          if (!res.success) {
+            return await customError(ctx, res.message, res.statusCode)
+          }
         }
 
         const userDTO = {
