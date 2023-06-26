@@ -52,7 +52,6 @@ module.exports = {
 
     const { data: { token } } = await res.json()
     const resp = await sendSMSOTP(SMS_URL, token, phone, code)
-    console.log(resp)
 
     if (resp.status !== 200) {
       return errorResponse(false, resp.status, "error while sending sms")

@@ -21,7 +21,6 @@ const sanitizeOutput = (user) => {
   return sanitizedUser;
 };
 const userFinder = async phone => {
-  console.log('Phone', phone)
   const _isPhonePlusMode = /^[+]998\d{9}$/.test(phone)
   const _phone = _isPhonePlusMode ? phone.toString().slice(1).trim() : phone
   const users = await strapi.entityService.findMany(

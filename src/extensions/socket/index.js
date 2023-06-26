@@ -249,7 +249,6 @@ module.exports = {
           let key = clients.search(socket.id);
           console.log('disconnected', socket.id, key)
           const user = await findUser(key)
-          console.log('user: ', user)
           if (user?.role.name.toLowerCase() === 'child') {
             const child = await findChildByUserId(key)
             if (child.parent) {
@@ -309,7 +308,10 @@ module.exports = {
             return io.to(socket.id).emit('error', customSocketError(405, 'parent is not online'))
           }
 
-          io.to(parentUserSocketId).emit('sos-from-child', customSocketSuccess({ childId: child.id }))
+          delete child.parent;
+          delete child.user;
+
+          io.to(parentUserSocketId).emit('sos-from-child', customSocketSuccess({ child: child }))
         } catch (err) {
           strapi.log.error('error in handler to event sos-from-child, err:', err)
           socket.emit('error', customSocketError(500, err.message))
