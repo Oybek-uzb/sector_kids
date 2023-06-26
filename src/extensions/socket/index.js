@@ -272,7 +272,7 @@ module.exports = {
       socket.on('sos-from-parent', async (data) => {
         try {
           const { user } = socket
-          const { childId } = JSON.parse(data)
+          const { childId } = data
           if (!childId) {
             return io.to(socket.id).emit('error', customSocketError(400, 'childId is empty'))
           }
@@ -319,7 +319,7 @@ module.exports = {
       socket.on('voice-record-start', async (data) => {
         try {
           const { user } = socket
-          const { childId, duration } = JSON.parse(data)
+          const { childId, duration } = data
           if (!duration) {
             return io.to(socket.id).emit('error', customSocketError(400, 'duration is empty'))
           }
@@ -353,7 +353,7 @@ module.exports = {
       socket.on('voice-record-done', async (data) => {
         try {
           const { user } = socket;
-          const { fileName } = JSON.parse(data)
+          const { fileName } = data
           if (user.role.name === 'parent') {
             return io.to(socket.id).emit('error', customSocketError(403,'only child can send event'))
           }
@@ -380,7 +380,7 @@ module.exports = {
       socket.on('voice-record-cancel', async (data) => {
         try {
           const { user } = socket;
-          const { childId } = JSON.parse(data)
+          const { childId } = data
           if (user.role.name === 'child') {
             return io.to(socket.id).emit('error', customSocketError(403,'only parent can send event'))
           }
