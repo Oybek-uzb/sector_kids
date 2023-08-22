@@ -81,7 +81,7 @@ module.exports = createCoreController('api::parent.parent', ({ strapi}) => ({
         for (const child of children) {
           const { id } = child.user
           const isVoiceRecording = await strapi.redisClient.get(`${id}_vr`)
-          child['isVoiceRecording'] = isVoiceRecording ?? false
+          child['isVoiceRecording'] = !!isVoiceRecording ?? false
         }
 
         return await customSuccess(ctx, children)

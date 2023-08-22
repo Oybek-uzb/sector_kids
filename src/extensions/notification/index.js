@@ -14,7 +14,7 @@ module.exports = {
     return {
       sendNotification: async (fcmToken, data) => await messaging.send({ ...data, token: fcmToken }),
       sendNotificationToTopic: async (topicName, data) => await messaging.send({ ...data, topic: topicName }),
-      subscribeTopic: async (fcm, topic_name) => await messaging.subscribeToTopic(fcm, topic_name)
+      subscribeTopic: async (fcm, topicName) => await messaging.subscribeToTopic(fcm, topicName)
     }
   },
   initializeFirebase: async function () {
