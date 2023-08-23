@@ -20,7 +20,7 @@
     },
     "hash": {
       "type": "string",
-      "unique": true
+      "unique": false
     },
     "type": {
       "type": "string"
