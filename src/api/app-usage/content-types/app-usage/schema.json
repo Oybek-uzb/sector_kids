@@ -15,9 +15,6 @@
     "day": {
       "type": "integer"
     },
-    "icon": {
-      "type": "text"
-    },
     "appName": {
       "type": "string"
     },
@@ -29,7 +26,7 @@
     },
     "hash": {
       "type": "string",
-      "unique": true
+      "unique": false
     },
     "child": {
       "type": "relation",
@@ -38,6 +35,9 @@
     },
     "date": {
       "type": "biginteger"
+    },
+    "icon": {
+      "type": "richtext"
     }
   }
 }
