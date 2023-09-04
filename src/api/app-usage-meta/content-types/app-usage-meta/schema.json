@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "app_usage_metas",
+  "info": {
+    "singularName": "app-usage-meta",
+    "pluralName": "app-usage-metas",
+    "displayName": "AppUsageMeta"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "child": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::child.child"
+    },
+    "meta": {
+      "type": "json"
+    }
+  }
+}
